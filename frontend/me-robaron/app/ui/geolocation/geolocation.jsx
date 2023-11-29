@@ -5,10 +5,8 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng
 } from 'use-places-autocomplete'
-import AutocompleteInput from '@/app/ui/geolocation/autocompleteInput'
 
-export default function Geolocation () {
-  const [selected, setSelected] = useState(null)
+export default function Geolocation ({ setSelected }) {
   const {
     ready,
     value,
@@ -16,6 +14,10 @@ export default function Geolocation () {
     suggestions: { status, data },
     clearSuggestions
   } = usePlacesAutocomplete()
+
+  console.log(data)
+
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
   const handleSelect = async (address) => {
     setValue(address, false)
@@ -26,14 +28,38 @@ export default function Geolocation () {
     setSelected({ lat, lng })
   }
 
+  const handleInputChange = (e) => {
+    setValue(e.target.value)
+    setShowSuggestions(true)
+  }
+
+  const handleSuggestionClick = (address) => {
+    setValue(address, false)
+    setShowSuggestions(false)
+    handleSelect(address)
+  }
+
   return (
-    <AutocompleteInput
-      ready={ready}
-      value={value}
-      setValue={setValue}
-      status={status}
-      data={data}
-      handleSelect={handleSelect}
-    />
+    <div>
+      <input
+        value={value}
+        onChange={handleInputChange}
+        disabled={!ready}
+        className='combobox-input'
+        placeholder='Buscar una dirección'
+      />
+      {showSuggestions && status === 'OK' && (
+        <div className='suggestion-list'>
+          {data.map((item) => (
+            <div
+              key={item.placeId}
+              onClick={() => handleSuggestionClick(item.description)}
+            >
+              {item.description}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

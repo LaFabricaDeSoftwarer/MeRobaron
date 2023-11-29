@@ -1,6 +1,6 @@
 'use client'
 import { useLoadScript } from '@react-google-maps/api'
-import Geolocation from '@/app/ui/geolocation/geolocation'
+import Map from '@/app/ui/geolocation/map'
 
 export default function Home () {
   const { isLoaded } = useLoadScript({
@@ -13,8 +13,7 @@ export default function Home () {
   return (
     <main className='flex min-h-screen flex-col items-center justify-between p-24'>
       <div>
-        <h1>Obtener coordenadas</h1>
-        <Geolocation />
+        <Map />
       </div>
     </main>
   )

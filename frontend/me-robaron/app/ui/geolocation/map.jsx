@@ -14,7 +14,7 @@ export default function Map () {
       </div>
 
       <GoogleMap
-        zoom={10}
+        zoom={5}
         center={center}
         mapContainerClassName={styles.mapContainer}
       >

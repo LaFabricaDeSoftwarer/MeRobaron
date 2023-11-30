@@ -1,32 +1,27 @@
-.autocompleteContainer {
-    position: relative;
-    width: 300px; 
+
+  .placesContainer {
+    padding-bottom: 30px;
+    width: 60%;
   }
   
-  .autocompleteInput{
+  .mapContainer {
     width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: solid 1px #ccc;
+    height: 100%;
   }
   
-  .autocompleteSuggestions {
+  .input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #080808;
+  }
+
+  .suggestionList {
     list-style: none;
     padding: 0;
     margin: 0;
-    position: absolute;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
   }
-  
-  .suggestionItem {
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .suggestionItem:hover {
-    background-color: #f1f1f1;
-  }
-  

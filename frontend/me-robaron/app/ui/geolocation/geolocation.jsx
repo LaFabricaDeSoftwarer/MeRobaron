@@ -5,6 +5,7 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng
 } from 'use-places-autocomplete'
+import styles from '@/app/ui/geolocation/styles.module.css'
 
 export default function Geolocation ({ setSelected }) {
   const {
@@ -26,6 +27,7 @@ export default function Geolocation ({ setSelected }) {
     const results = await getGeocode({ address })
     const { lat, lng } = await getLatLng(results[0])
     setSelected({ lat, lng })
+    console.log(lat, lng)
   }
 
   const handleInputChange = (e) => {
@@ -45,11 +47,11 @@ export default function Geolocation ({ setSelected }) {
         value={value}
         onChange={handleInputChange}
         disabled={!ready}
-        className='combobox-input'
+        className={styles.input}
         placeholder='Buscar una dirección'
       />
       {showSuggestions && status === 'OK' && (
-        <div className='suggestion-list'>
+        <div className={styles.suggestionList}>
           {data.map((item) => (
             <div
               key={item.placeId}

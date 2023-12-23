@@ -4,7 +4,6 @@ import Geolocation from '@/app/ui/geolocation/geolocation'
 import styles from '@/app/ui/geolocation/styles.module.css'
 
 export default function Map () {
-  // const center = useMemo(() => ({ lat: -31.43105, lng: -64.1899865 }), [])
   const [selected, setSelected] = useState(null)
   const center = useMemo(() => selected || { lat: -31.43105, lng: -64.1899865 }, [selected])
 
@@ -14,13 +13,10 @@ export default function Map () {
         <Geolocation setSelected={setSelected} />
       </div>
 
-      <GoogleMap
-        zoom={selected ? 15 : 5}
-        center={center}
-        mapContainerClassName={styles.mapContainer}
-      >
+      <GoogleMap zoom={selected ? 15 : 5} center={center} mapContainerClassName={styles.mapContainer}>
         {selected && <Marker position={selected} />}
       </GoogleMap>
+
     </>
   )
 };

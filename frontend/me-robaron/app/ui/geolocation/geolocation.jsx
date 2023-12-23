@@ -6,6 +6,7 @@ import usePlacesAutocomplete, {
   getLatLng
 } from 'use-places-autocomplete'
 import styles from '@/app/ui/geolocation/styles.module.css'
+import { saveLocation } from '@/app/services/apiServices'
 
 export default function Geolocation ({ setSelected }) {
   const {
@@ -16,8 +17,6 @@ export default function Geolocation ({ setSelected }) {
     clearSuggestions
   } = usePlacesAutocomplete()
 
-  console.log(data)
-
   const [showSuggestions, setShowSuggestions] = useState(false)
 
   const handleSelect = async (address) => {
@@ -27,7 +26,13 @@ export default function Geolocation ({ setSelected }) {
     const results = await getGeocode({ address })
     const { lat, lng } = await getLatLng(results[0])
     setSelected({ lat, lng })
-    console.log(lat, lng)
+    try {
+      await saveLocation({ address, latitude: lat, longitude: lng })
+      console.log('Ubicación guardada correctamente')
+      console.log('Dirección:', address, 'Latitud:', lat, 'Longitud:', lng)
+    } catch (error) {
+      console.error('Error al guardar la ubicación:', error.message)
+    }
   }
 
   const handleInputChange = (e) => {
@@ -54,7 +59,7 @@ export default function Geolocation ({ setSelected }) {
         <div className={styles.suggestionList}>
           {data.map((item) => (
             <div
-              key={item.placeId}
+              key={item.place_id}
               onClick={() => handleSuggestionClick(item.description)}
             >
               {item.description}

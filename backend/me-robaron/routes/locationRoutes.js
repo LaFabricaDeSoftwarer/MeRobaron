@@ -1,6 +1,5 @@
 import express from 'express'
-import { saveLocation } from '../controllers/locationController.js'
-import { getAllLocations } from '../controllers/locationController.js'
+import { saveLocation, getAllLocations } from '../controllers/locationController.js'
 
 const router = express.Router()
 
@@ -8,7 +7,6 @@ const router = express.Router()
 router.post('/ubicacion', saveLocation)
 
 // Ruta para obtener todas las ubicaciones almacenadas
-router.get('/ubicaciones', getAllLocations);
-
+router.get('/ubicaciones', getAllLocations)
 
 export default router

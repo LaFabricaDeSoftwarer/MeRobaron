@@ -5,37 +5,36 @@ export default class Location {
     this.longitude = longitude
   }
 
-
- save(db, callback) {
+  save (db, callback) {
     const insertDireccionSql =
-      'INSERT INTO direcciones (nombre, latitud, longitud) VALUES (?, ?, ?)';
+      'INSERT INTO direcciones (nombre, latitud, longitud) VALUES (?, ?, ?)'
     db.query(
       insertDireccionSql,
       [this.address, this.latitude, this.longitude],
       (err, result) => {
         if (err) {
-          callback(err, null);
+          callback(err, null)
         } else {
           const insertCoordenadasSql =
-            'INSERT INTO coordenadas (latitud, longitud, direccion_id) VALUES (?, ?, ?)';
+            'INSERT INTO coordenadas (latitud, longitud, direccion_id) VALUES (?, ?, ?)'
           db.query(
             insertCoordenadasSql,
             [this.latitude, this.longitude, result.insertId],
             callback
-          );
+          )
         }
       }
-    );
+    )
   }
 
-  static getAll(db, callback) {
-    const selectAllSql = 'SELECT * FROM coordenadas';
+  static getAll (db, callback) {
+    const selectAllSql = 'SELECT * FROM coordenadas'
     db.query(selectAllSql, (err, results) => {
       if (err) {
-        callback(err, null);
+        callback(err, null)
       } else {
-        callback(null, results);
+        callback(null, results)
       }
-    });
+    })
   }
 }

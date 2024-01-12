@@ -53,7 +53,6 @@ export default function Geolocation ({ setSelected }) {
         onChange={handleInputChange}
         disabled={!ready}
         className={styles.input}
-        placeholder='Buscar una dirección'
       />
       {showSuggestions && status === 'OK' && (
         <div className={styles.suggestionList}>

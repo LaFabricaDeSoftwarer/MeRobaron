@@ -1,6 +1,7 @@
+// app.js
 import express from 'express'
 import cors from 'cors'
-import locationRoutes from './routes/locationRoutes.js'
+import reportRoutes from './routes/reportRoutes.js'
 
 const app = express()
 const PORT = 1234
@@ -10,8 +11,8 @@ app.use(express.json())
 
 app.use(cors())
 
-// Rutas
-app.use('/', locationRoutes)
+// Ruta
+app.use('/', reportRoutes)
 
 // Inicia el servidor
 app.listen(PORT, () => {

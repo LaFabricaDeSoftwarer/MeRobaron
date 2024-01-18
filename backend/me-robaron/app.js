@@ -4,7 +4,7 @@ import cors from 'cors'
 import reportRoutes from './routes/reportRoutes.js'
 
 const app = express()
-const PORT = 1234
+const PORT = 3001
 
 // Middleware para parsear el cuerpo de la solicitud como JSON
 app.use(express.json())

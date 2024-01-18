@@ -6,11 +6,8 @@ import { saveLocation, getAllLocations } from '../controllers/locationController
 const router = express.Router()
 
 router.post('/usuario', saveUser)
-
 router.post('/ubicacion', saveLocation)
-
 router.get('/ubicaciones', getAllLocations)
-
 router.post('/denuncia', saveReport)
 
 export default router

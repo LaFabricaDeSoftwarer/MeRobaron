@@ -6,10 +6,10 @@ export class User {
     nroDocumento,
     edad,
     telefono,
-    calleUser,
-    numeroUser,
-    barrioUser,
-    ciudadUser,
+    calle,
+    numero,
+    barrio,
+    ciudad,
     nacionalidad,
     estadoCivil,
     ocupacion,
@@ -21,10 +21,10 @@ export class User {
     this.nroDocumento = nroDocumento
     this.edad = edad
     this.telefono = telefono
-    this.calleUser = calleUser
-    this.numeroUser = numeroUser
-    this.barrioUser = barrioUser
-    this.ciudadUser = ciudadUser
+    this.calle = calle
+    this.numero = numero
+    this.barrio = barrio
+    this.ciudad = ciudad
     this.nacionalidad = nacionalidad
     this.estadoCivil = estadoCivil
     this.ocupacion = ocupacion
@@ -53,10 +53,16 @@ export class User {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `
 
-    return db.execute(insertUsuarioSql, [
-      this.apellido, this.nombre, this.tipoDocumento, this.nroDocumento, this.edad,
-      this.telefono, this.calleUser, this.numeroUser, this.barrioUser, this.ciudadUser,
+    db.query(insertUsuarioSql, [
+      this.nombre, this.apellido, this.tipoDocumento, this.nroDocumento, this.edad,
+      this.telefono, this.calle, this.numero, this.barrio, this.ciudad,
       this.nacionalidad, this.estadoCivil, this.ocupacion, this.nivelEstudio, this.correoElectronico
-    ])
+    ], (err, result) => {
+      if (err) {
+        console.error('Error al insertar datos en la base de datos:', err)
+      } else {
+        console.log('Datos insertados correctamente en la base de datos')
+      }
+    })
   }
 }

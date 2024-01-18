@@ -9,6 +9,7 @@ export const saveReport = (req, res) => {
     otrasReferencias,
     escenarioDelHecho,
     detalle,
+    direccionID,
     medioTransportePersona,
     tiposObjetosSustraidos
   } = req.body
@@ -20,6 +21,7 @@ export const saveReport = (req, res) => {
     otrasReferencias,
     escenarioDelHecho,
     detalle,
+    direccionID,
     medioTransportePersona,
     tiposObjetosSustraidos
   )
@@ -29,7 +31,7 @@ export const saveReport = (req, res) => {
       console.error('Error al insertar datos en la base de datos:', err)
       res.status(500).json({ error: 'Error interno del servidor' })
     } else {
-      console.log('Datos insertados correctamente en la base de datos')
+      console.log('Datos insertados correctamente en la base de datos', result)
       res.json({ message: 'Datos recibidos correctamente' })
     }
   })

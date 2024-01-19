@@ -1,20 +1,10 @@
 // components/ReportForm.js
 import React, { useState } from 'react'
-import { saveReport, saveUser, saveLocation } from '@/app/services/apiServices'
+import { saveUser, saveLocation, saveReport } from '@/app/services/apiServices'
 import styles from '@/app/ui/reportForm/styles.module.css'
 import Map from '@/app/ui/geolocation/map'
 
 export default function ReportForm () {
-  const [reportData, setReportData] = useState({
-    fecha: '',
-    horaAproximada: '',
-    otrasReferencias: '',
-    escenarioDelHecho: '',
-    detalle: '',
-    medioTransportePersona: '',
-    tiposObjetosSustraidos: ''
-  })
-
   const [userData, setUserData] = useState({
     apellido: '',
     nombre: '',
@@ -22,10 +12,10 @@ export default function ReportForm () {
     nroDocumento: '',
     edad: '',
     telefono: '',
-    calleUser: '',
-    numeroUser: '',
-    barrioUser: '',
-    ciudadUser: '',
+    calle: '',
+    numero: '',
+    barrio: '',
+    ciudad: '',
     nacionalidad: '',
     estadoCivil: '',
     ocupacion: '',
@@ -33,19 +23,37 @@ export default function ReportForm () {
     correoElectronico: ''
   })
 
+  const [reportData, setReportData] = useState({
+    usuarioID: '',
+    fecha: '',
+    horaAproximada: '',
+    otrasReferencias: '',
+    escenarioDelHecho: '',
+    detalle: '',
+    direccionID: '',
+    medioTransportePersona: '',
+    tiposObjetosSustraidos: ''
+  })
+
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [locations, setLocations] = useState([])
-  console.log('locations:', locations)
 
   const handleReportSubmit = async () => {
     try {
-      const locationData = await saveLocation({ address: selectedLocation.address, latitude: selectedLocation.lat, longitude: selectedLocation.lng })
-      console.log('Ubicación guardada correctamente:', locationData)
-
+      // Guardo la ubicación y obtengo su id
+      await saveLocation({
+        address: selectedLocation.address,
+        latitude: selectedLocation.lat,
+        longitude: selectedLocation.lng
+      })
       const userDataSaved = await saveUser(userData)
-      console.log('Datos de usuario guardados correctamente:', userDataSaved)
 
-      const reportDataSaved = await saveReport({ ...reportData, idUsuario: userDataSaved.idUsuario, idUbicacion: locationData.idUbicacion })
+      const reportDataSaved = await saveReport({
+        ...reportData,
+        usuarioID: userDataSaved.UsuarioID,
+        direccionID: userDataSaved.DireccionID
+      })
+
       console.log('Datos de denuncia guardados correctamente:', reportDataSaved)
     } catch (error) {
       console.error('Error al guardar datos:', error.message)
@@ -74,31 +82,31 @@ export default function ReportForm () {
           </div>
           <div>
             <label className={styles.labelForm}>Número de documento:</label>
-            <input type='text' value={userData.nroDocumento} onChange={(e) => setUserData({ ...userData, nroDocumento: e.target.value })} className={styles.inputForm} />
+            <input type='number' value={userData.nroDocumento} onChange={(e) => setUserData({ ...userData, nroDocumento: e.target.value })} className={styles.inputForm} />
           </div>
           <div>
             <label className={styles.labelForm}>Edad:</label>
-            <input type='text' value={userData.edad} onChange={(e) => setUserData({ ...userData, edad: e.target.value })} className={styles.inputForm} />
+            <input type='number' value={userData.edad} onChange={(e) => setUserData({ ...userData, edad: e.target.value })} className={styles.inputForm} />
           </div>
           <div>
             <label className={styles.labelForm}>Teléfono:</label>
-            <input type='text' value={userData.telefono} onChange={(e) => setUserData({ ...userData, telefono: e.target.value })} className={styles.inputForm} />
+            <input type='number' value={userData.telefono} onChange={(e) => setUserData({ ...userData, telefono: e.target.value })} className={styles.inputForm} />
           </div>
           <div>
             <label className={styles.labelForm}>Calle:</label>
-            <input type='text' value={userData.calleUser} onChange={(e) => setUserData({ ...userData, calleUser: e.target.value })} className={styles.inputForm} />
+            <input type='text' value={userData.calle} onChange={(e) => setUserData({ ...userData, calle: e.target.value })} className={styles.inputForm} />
           </div>
           <div>
             <label className={styles.labelForm}>Número:</label>
-            <input type='text' value={userData.numeroUser} onChange={(e) => setUserData({ ...userData, numeroUser: e.target.value })} className={styles.inputForm} />
+            <input type='number' value={userData.numero} onChange={(e) => setUserData({ ...userData, numero: e.target.value })} className={styles.inputForm} />
           </div>
           <div>
             <label className={styles.labelForm}>Barrio:</label>
-            <input type='text' value={userData.barrioUser} onChange={(e) => setUserData({ ...userData, barrioUser: e.target.value })} className={styles.inputForm} />
+            <input type='text' value={userData.barrio} onChange={(e) => setUserData({ ...userData, barrio: e.target.value })} className={styles.inputForm} />
           </div>
           <div>
             <label className={styles.labelForm}>Ciudad:</label>
-            <input type='text' value={userData.ciudadUser} onChange={(e) => setUserData({ ...userData, ciudadUser: e.target.value })} className={styles.inputForm} />
+            <input type='text' value={userData.ciudad} onChange={(e) => setUserData({ ...userData, ciudad: e.target.value })} className={styles.inputForm} />
           </div>
           <div>
             <label className={styles.labelForm}>Nacionalidad:</label>
@@ -118,7 +126,7 @@ export default function ReportForm () {
           </div>
           <div>
             <label className={styles.labelForm}>Correo electrónico:</label>
-            <input type='text' value={userData.correoElectronico} onChange={(e) => setUserData({ ...userData, correoElectronico: e.target.value })} className={styles.inputForm} />
+            <input type='email' value={userData.correoElectronico} onChange={(e) => setUserData({ ...userData, correoElectronico: e.target.value })} className={styles.inputForm} />
           </div>
         </div>
 

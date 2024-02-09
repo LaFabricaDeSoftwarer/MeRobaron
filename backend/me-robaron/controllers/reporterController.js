@@ -1,22 +1,20 @@
-import { Report } from '../models/reportModel.js'
+import { Reporter } from '../models/reporterModel.js'
 import db from '../dbconfig.js'
 
-export const saveReport = (req, res) => {
+export const saveReporter = (req, res) => {
   const {
-    date,
-    reporterID,
-    locationID,
-    detail
+    personID,
+    email,
+    aceptCondition
   } = req.body
 
-  const report = new Report(
-    date,
-    reporterID,
-    locationID,
-    detail
+  const reporter = new Reporter(
+    personID,
+    email,
+    aceptCondition
   )
 
-  report.save(db, (err, result) => {
+  reporter.save(db, (err, result) => {
     if (err) {
       console.error('Error al insertar datos en la base de datos:', err)
       res.status(500).json({ error: 'Error interno del servidor' })

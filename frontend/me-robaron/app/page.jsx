@@ -1,11 +1,11 @@
 'use client'
 import style from '@/app//styles.module.css'
-import ReportForm from '@/app/ui/reportForm/reportForm'
+import ReportDetailForm from './ui/reportDetailForm/ReportDetailForm'
 
 export default function Home () {
   return (
     <main className={style.content}>
-      <ReportForm />
+      <ReportDetailForm />
     </main>
   )
 }

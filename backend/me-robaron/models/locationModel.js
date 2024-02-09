@@ -1,16 +1,27 @@
 export class Location {
-  constructor (address, latitude, longitude) {
-    this.address = address
+  constructor (calle, numero, barrio, ciudad, latitude, longitude) {
+    this.calle = calle
+    this.numero = numero
+    this.barrio = barrio
+    this.ciudad = ciudad
     this.latitude = latitude
     this.longitude = longitude
   }
 
   save (db, callback) {
-    const insertDireccionSql =
-      'INSERT INTO Direccion (Nombre, Latitud, Longitud) VALUES (?, ?, ?)'
+    const insertLocationSql = `
+        INSERT INTO Direccion (
+            Calle, 
+            Numero,
+            Barrio,
+            Ciudad,
+            Latitud,
+            Longitud
+        ) VALUES (?, ?, ?, ?, ?, ?)`
+
     db.query(
-      insertDireccionSql,
-      [this.address, this.latitude, this.longitude],
+      insertLocationSql,
+      [this.calle, this.numero, this.barrio, this.ciudad, this.latitude, this.longitude],
       (err, result) => {
         if (err) {
           callback(err, null)

@@ -1,23 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styles from './styles.module.css'
 
-function LocationDataForm ({ onSubmit }) {
-  const [locationData, setLocationData] = useState({
-    calle: '',
-    numero: '',
-    barrio: '',
-    ciudad: '',
-    latitud: '',
-    longitud: ''
-  })
-
-  useEffect(() => {
-    onSubmit(locationData)
-  }, [locationData, onSubmit])
-
+function LocationDataForm ({ locationData, onChangeLocation }) {
   const handleChangeLocation = ({ target }) => {
     const { name, value } = target
-    setLocationData({
+    onChangeLocation({
       ...locationData,
       [name]: value
     })

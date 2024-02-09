@@ -1,37 +1,11 @@
-import React, { useState } from 'react'
-import { saveLocation } from '@/app/services/apiServices'
-import LocationDataForm from '@/app/ui/locationDataForm/LocationDataForm'
+import React from 'react'
+import LocationDataForm from '@/app/components/reportDetailForm/locationDataForm/LocationDataForm'
 import styles from './styles.module.css'
 
-function PersonDataForm () {
-  const [personData, setPersonData] = useState({
-    apellido: '',
-    nombre: '',
-    tipoDocumento: '',
-    nroDocumento: '',
-    edad: '',
-    telefono: '',
-    direccionID: ''
-  })
-
-  const handleLocationFormSubmit = async (locationData) => {
-    try {
-      const response = await saveLocation(locationData)
-      console.log('Datos de ubicación enviados exitosamente.')
-      console.log('Respuesta:', response.data)
-      const { location } = response.data
-      setPersonData(prevData => ({
-        ...prevData,
-        direccionID: location.id
-      }))
-    } catch (error) {
-      console.error('Error al enviar datos de ubicación:', error)
-    }
-  }
-
+function PersonDataForm ({ personData, onChangePerson, locationData, onChangeLocation }) {
   const handleChangePerson = ({ target }) => {
     const { name, value } = target
-    setPersonData({
+    onChangePerson({
       ...personData,
       [name]: value
     })
@@ -93,7 +67,7 @@ function PersonDataForm () {
           onChange={handleChangePerson}
         />
       </div>
-      <LocationDataForm onSubmit={handleLocationFormSubmit} />
+      <LocationDataForm locationData={locationData} onChangeLocation={onChangeLocation} />
     </>
   )
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import LocationDataForm from '@/app/components/reportDetailForm/locationDataForm/LocationDataForm'
 import styles from './styles.module.css'
 
-function PersonDataForm ({ personData, onChangePerson, locationData, onChangeLocation }) {
+function PersonDataForm ({ personData = {}, onChangePerson, locationData, onChangeLocation }) {
   const handleChangePerson = ({ target }) => {
     const { name, value } = target
     onChangePerson({
@@ -18,7 +18,7 @@ function PersonDataForm ({ personData, onChangePerson, locationData, onChangeLoc
         <input
           type='text'
           name='apellido'
-          value={personData.apellido}
+          value={personData.apellido || ''}
           onChange={handleChangePerson}
         />
       </div>
@@ -27,7 +27,7 @@ function PersonDataForm ({ personData, onChangePerson, locationData, onChangeLoc
         <input
           type='text'
           name='nombre'
-          value={personData.nombre}
+          value={personData.nombre || ''}
           onChange={handleChangePerson}
         />
       </div>
@@ -36,7 +36,7 @@ function PersonDataForm ({ personData, onChangePerson, locationData, onChangeLoc
         <input
           type='text'
           name='tipoDocumento'
-          value={personData.tipoDocumento}
+          value={personData.tipoDocumento || ''}
           onChange={handleChangePerson}
         />
       </div>
@@ -45,7 +45,7 @@ function PersonDataForm ({ personData, onChangePerson, locationData, onChangeLoc
         <input
           type='number'
           name='nroDocumento'
-          value={personData.nroDocumento}
+          value={personData.nroDocumento || ''}
           onChange={handleChangePerson}
         />
       </div>
@@ -54,7 +54,7 @@ function PersonDataForm ({ personData, onChangePerson, locationData, onChangeLoc
         <input
           type='number'
           name='edad'
-          value={personData.edad}
+          value={personData.edad || ''}
           onChange={handleChangePerson}
         />
       </div>
@@ -63,7 +63,7 @@ function PersonDataForm ({ personData, onChangePerson, locationData, onChangeLoc
         <input
           type='text'
           name='telefono'
-          value={personData.telefono}
+          value={personData.telefono || ''}
           onChange={handleChangePerson}
         />
       </div>

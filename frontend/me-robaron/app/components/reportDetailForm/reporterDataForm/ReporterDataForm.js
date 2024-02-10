@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './styles.module.css'
 
-function ReporterDataForm ({ reporterData, onChangeReporter }) {
+function ReporterDataForm ({ reporterData = {}, onChangeReporter }) {
   const handleChangeReporter = ({ target }) => {
     const { name, value } = target
     onChangeReporter({
@@ -17,7 +17,7 @@ function ReporterDataForm ({ reporterData, onChangeReporter }) {
         <input
           type='email'
           name='email'
-          value={reporterData.email}
+          value={reporterData.email || ''}
           onChange={handleChangeReporter}
         />
       </div>

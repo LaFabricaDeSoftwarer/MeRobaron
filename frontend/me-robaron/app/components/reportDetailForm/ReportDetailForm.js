@@ -3,7 +3,7 @@ import ReporterDataForm from './reporterDataForm/ReporterDataForm'
 import LocationDataForm from './locationDataForm/LocationDataForm'
 import PersonDataForm from './personDataForm/PersonDataForm'
 import styles from './styles.module.css'
-import { savePerson, saveLocation, saveReport } from '@/app/services/reportService'
+import { savePerson, saveLocation, saveReport } from '@/app/services/apiServices'
 
 function ReportDetailForm () {
   // const [submitting, setSubmitting] = useState(false)
@@ -40,6 +40,14 @@ function ReportDetailForm () {
       ...reportDetailData,
       [name]: value
     })
+  }
+
+  const handleChangePerson = (newPersonData) => {
+    setPersonData(newPersonData)
+  }
+
+  const handleChangeLocation = (newLocationData) => {
+    setLocationData(newLocationData)
   }
 
   const handleSubmit = async (event) => {
@@ -90,9 +98,17 @@ function ReportDetailForm () {
 
   return (
     <form onSubmit={handleSubmit}>
-      <PersonDataForm />
+      <PersonDataForm
+        personData={personData}
+        onChangePerson={handleChangePerson}
+        locationData={locationData}
+        onChangeLocation={handleChangeLocation}
+      />
       <ReporterDataForm />
-      <LocationDataForm />
+      <LocationDataForm
+        locationData={locationData}
+        onChangeLocation={handleChangeLocation}
+      />
       <div className={styles.inputContainer}>
         <label>Date</label>
         <input

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@react-google-maps/api": "^2.19.2",
+    "axios": "^1.6.7",
+    "formik": "^2.4.5",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.5",
     "next": "14.0.3",

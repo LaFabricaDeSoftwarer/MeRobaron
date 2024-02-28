@@ -11,8 +11,9 @@ export class Report {
     this.detail = detail
   }
 
-  save (db, callback) {
-    const insertDenunciaSql = `
+  save (db) {
+    return new Promise((resolve, reject) => {
+      const insertDenunciaSql = `
         INSERT INTO Denuncia (
           Fecha,
           DenuncianteID,
@@ -20,14 +21,15 @@ export class Report {
           Detalle
         ) VALUES (?, ?, ?, ?)
       `
-    db.query(insertDenunciaSql, [
-      this.date, this.reporterID, this.locationID, this.detail
-    ], (err, result) => {
-      if (err) {
-        callback(err, null)
-      } else {
-        callback(null, result)
-      }
+      db.query(insertDenunciaSql, [
+        this.date, this.reporterID, this.locationID, this.detail
+      ], (err, result) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ id: result.insertId })
+        }
+      })
     })
   }
 }

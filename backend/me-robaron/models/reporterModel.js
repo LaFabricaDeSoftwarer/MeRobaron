@@ -10,7 +10,8 @@ export class Reporter {
   }
 
   save (db) {
-    const insertReporterSql = `
+    return new Promise((resolve, reject) => {
+      const insertReporterSql = `
         INSERT INTO Denunciante (
           PersonaID,
           Email,
@@ -18,14 +19,15 @@ export class Reporter {
         ) VALUES (?, ?, ?)
       `
 
-    db.query(insertReporterSql, [
-      this.personID, this.email,
-      this.aceptCondition], (err, result) => {
-      if (err) {
-        console.error('Error al insertar datos en la base de datos:', err)
-      } else {
-        console.log('Datos insertados correctamente en la base de datos')
-      }
+      db.query(insertReporterSql, [
+        this.personID, this.email,
+        this.aceptCondition], (err, result) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ id: result.insertId })
+        }
+      })
     })
   }
 }

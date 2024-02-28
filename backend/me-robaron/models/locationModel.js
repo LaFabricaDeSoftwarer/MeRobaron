@@ -1,45 +1,43 @@
 export class Location {
-  constructor (calle, numero, barrio, ciudad, latitude, longitude) {
-    this.calle = calle
-    this.numero = numero
-    this.barrio = barrio
-    this.ciudad = ciudad
+  constructor (direction, latitude, longitude) {
+    this.direction = direction
     this.latitude = latitude
     this.longitude = longitude
   }
 
-  save (db, callback) {
-    const insertLocationSql = `
+  save (db) {
+    return new Promise((resolve, reject) => {
+      const insertLocationSql = `
         INSERT INTO Direccion (
-            Calle, 
-            Numero,
-            Barrio,
-            Ciudad,
-            Latitud,
-            Longitud
-        ) VALUES (?, ?, ?, ?, ?, ?)`
+          Direccion,
+          Latitud,
+          Longitud
+        ) VALUES (?, ?, ?)`
 
-    db.query(
-      insertLocationSql,
-      [this.calle, this.numero, this.barrio, this.ciudad, this.latitude, this.longitude],
-      (err, result) => {
-        if (err) {
-          callback(err, null)
-        } else {
-          callback(null, result)
+      db.query(
+        insertLocationSql,
+        [this.direction, this.latitude, this.longitude],
+        (err, result) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve({ id: result.insertId })
+          }
         }
-      }
-    )
+      )
+    })
   }
 
-  static getAll (db, callback) {
-    const selectAllSql = 'SELECT * FROM Direccion'
-    db.query(selectAllSql, (err, results) => {
-      if (err) {
-        callback(err, null)
-      } else {
-        callback(null, results)
-      }
+  static getAll (db) {
+    return new Promise((resolve, reject) => {
+      const selectAllSql = 'SELECT * FROM Direccion'
+      db.query(selectAllSql, (err, results) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results)
+        }
+      })
     })
   }
 }

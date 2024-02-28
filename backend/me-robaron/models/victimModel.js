@@ -4,19 +4,21 @@ export class Victim {
     this.reportID = reportID
   }
 
-  save (db, callback) {
-    const insertVictimSql = `
+  save (db) {
+    return new Promise((resolve, reject) => {
+      const insertVictimSql = `
         INSERT INTO Victima (
             PersonaID, 
             DenunciaID
         ) VALUES (?, ?)`
 
-    db.query(insertVictimSql, [this.personID, this.reportID], (err, result) => {
-      if (err) {
-        callback(err, null)
-      } else {
-        callback(null, result)
-      }
+      db.query(insertVictimSql, [this.personID, this.reportID], (err, result) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ id: result.insertId })
+        }
+      })
     })
   }
 }

@@ -11,24 +11,25 @@ export class Reported {
     this.appearance = appearance
   }
 
-  save (db, callback) {
-    const insertReportedSql = `
+  save (db) {
+    return new Promise((resolve, reject) => {
+      const insertReportedSql = `
             INSERT INTO Denunciado (
                 PersonaID, 
                 DenunciaID,
                 Vestimenta,
                 AparienciaFisica
             ) VALUES (?, ?, ?, ?)
-            ) VALUES (?, ?, ?, ?)
         `
-    db.query(insertReportedSql, [
-      this.personID, this.reportID, this.clothing, this.appearance
-    ], (err, result) => {
-      if (err) {
-        callback(err, null)
-      } else {
-        callback(null, result)
-      }
+      db.query(insertReportedSql, [
+        this.personID, this.reportID, this.clothing, this.appearance
+      ], (err, result) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ id: result.insertId })
+        }
+      })
     })
   }
 }

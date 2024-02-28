@@ -1,11 +1,14 @@
 'use client'
-import style from '@/app//styles.module.css'
-import ReportForm from '@/app/ui/reportForm/reportForm'
+
+import { MForm } from './components/form/Form'
+
+// import MainForm from '../app/components/mainForm/MainForm'
 
 export default function Home () {
   return (
-    <main className={style.content}>
-      <ReportForm />
-    </main>
+    <div>
+      {/* <MainForm /> */}
+      <MForm />
+    </div>
   )
 }

@@ -1,10 +1,11 @@
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { GoogleMap, Marker } from '@react-google-maps/api'
-import Geolocation from '@/app/ui/geolocation/geolocation'
-import styles from '@/app/ui/geolocation/styles.module.css'
-import { fetchLocations } from '@/app/services/apiServices'
+import styles from './styles.module.css'
+import { fetchLocations } from '../../services/apiServices'
+import Geolocation from './Geolocation'
 
-export default function Map ({ selected, setSelected, locations, setLocations }) {
+export default function Map ({ selected, setSelected }) {
+  const [locations, setLocations] = useState([])
   const center = useMemo(() => selected || { lat: -31.43105, lng: -64.1899865 }, [selected])
 
   useEffect(() => {

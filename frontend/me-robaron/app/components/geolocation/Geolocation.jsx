@@ -5,8 +5,7 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng
 } from 'use-places-autocomplete'
-import styles from '@/app/ui/geolocation/styles.module.css'
-import { saveLocation } from '@/app/services/apiServices'
+import styles from './styles.module.css'
 
 export default function Geolocation ({ setSelected }) {
   const {
@@ -26,13 +25,6 @@ export default function Geolocation ({ setSelected }) {
     const results = await getGeocode({ address })
     const { lat, lng } = await getLatLng(results[0])
     setSelected({ lat, lng })
-    try {
-      await saveLocation({ address, latitude: lat, longitude: lng })
-      console.log('Ubicación guardada correctamente')
-      console.log('Dirección:', address, 'Latitud:', lat, 'Longitud:', lng)
-    } catch (error) {
-      console.error('Error al guardar la ubicación:', error.message)
-    }
   }
 
   const handleInputChange = (e) => {

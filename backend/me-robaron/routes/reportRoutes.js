@@ -1,13 +1,10 @@
+import { saveFormData } from '../controllers/formController.js'
+import { getAllLocations } from '../controllers/locationsController.js'
 import express from 'express'
-import { saveReport } from '../controllers/reportController.js'
-import { saveUser } from '../controllers/userController.js'
-import { saveLocation, getAllLocations } from '../controllers/locationController.js'
 
 const router = express.Router()
 
-router.post('/usuario', saveUser)
-router.post('/ubicacion', saveLocation)
-router.get('/ubicaciones', getAllLocations)
-router.post('/denuncia', saveReport)
+router.post('/formulario', saveFormData)
+router.get('/direcciones', getAllLocations)
 
 export default router

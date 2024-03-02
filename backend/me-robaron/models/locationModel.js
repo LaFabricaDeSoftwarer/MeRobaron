@@ -1,8 +1,8 @@
 export class Location {
-  constructor (direction, latitude, longitude) {
-    this.direction = direction
-    this.latitude = latitude
-    this.longitude = longitude
+  constructor (direccion, latitud, longitud) {
+    this.direccion = direccion
+    this.latitud = latitud
+    this.longitud = longitud
   }
 
   save (db) {
@@ -16,7 +16,7 @@ export class Location {
 
       db.query(
         insertLocationSql,
-        [this.direction, this.latitude, this.longitude],
+        [this.direccion, this.latitud, this.longitud],
         (err, result) => {
           if (err) {
             reject(err)

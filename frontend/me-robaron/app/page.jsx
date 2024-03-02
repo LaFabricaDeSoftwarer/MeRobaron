@@ -1,14 +1,11 @@
 'use client'
-
-import { MForm } from './components/form/Form'
-
-// import MainForm from '../app/components/mainForm/MainForm'
+import React from 'react'
+import { MainForm } from './components/form/MainForm'
 
 export default function Home () {
   return (
     <div>
-      {/* <MainForm /> */}
-      <MForm />
+      <MainForm />
     </div>
   )
 }

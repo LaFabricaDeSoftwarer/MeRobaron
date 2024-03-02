@@ -1,33 +1,37 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-import styles from '../mainForm/styles.module.css'
-import { submitForm } from '../../services/apiServices'
+import styles from './styles.module.css'
+import { submitForm, fetchLocations } from '../../services/apiServices'
 import Map from '../geolocation/Map'
+import Geolocation from '../geolocation/Geolocation'
+import { useState, useEffect } from 'react'
 // import * as yup from 'yup'
 
-export const MForm = ({ selected, setSelected }) => {
-  //   const validationSchema = yup.object({
-  //     apellido: yup.string().required('El apellido es obligatorio'),
-  //     nombre: yup.string().required('El nombre es obligatorio'),
-  //     tipoDocumento: yup.string().required('El tipo de documento es obligatorio'),
-  //     nroDocumento: yup.string().required('El número de documento es obligatorio'),
-  //     edad: yup.number().required('La edad es obligatoria'),
-  //     telefono: yup.string().required('El teléfono es obligatorio'),
-  //     email: yup.string().required('El email es obligatorio'),
-  //     aceptCondition: yup.boolean().required('La aceptación de las condiciones es obligatoria'),
-  //     date: yup.string().required('La fecha es obligatoria'),
-  //     calle: yup.string().required('La calle es obligatoria'),
-  //     numero: yup.number().required('El número es obligatorio'),
-  //     barrio: yup.string().required('El barrio es obligatorio'),
-  //     ciudad: yup.string().required('La ciudad es obligatoria'),
-  //     latitud: yup.number().required('La latitud es obligatoria'),
-  //     longitud: yup.number().required('La longitud es obligatoria'),
-  //     detail: yup.string().required('El detalle es obligatorio'),
-  //     clothing: yup.string().required('La vestimenta es obligatoria'),
-  //     appearance: yup.string().required('La apariencia es obligatoria')
-  //   })
+export const MainForm = () => {
+  const [locationData, setLocationData] = useState({
+    direccion: '',
+    latitud: '',
+    longitud: ''
+  })
+  const [locations, setLocations] = useState([])
+
+  useEffect(() => {
+    const fetchLocationsData = async () => {
+      try {
+        const locationsData = await fetchLocations()
+        setLocations(locationsData)
+      } catch (error) {
+        console.error('Error fetching locations:', error.message)
+      }
+    }
+
+    fetchLocationsData()
+  }, [])
+
   const handleSubmit = async (values, { setSubmitting }) => {
+    console.log('values:', values)
     try {
-      const responseData = await submitForm(values)
+      const dataToSend = { ...values, ...locationData }
+      const responseData = await submitForm(dataToSend)
       console.log('Response:', responseData)
       alert('Formulario enviado exitosamente')
     } catch (error) {
@@ -54,9 +58,9 @@ export const MForm = ({ selected, setSelected }) => {
         email: '',
         aceptCondition: false,
         date: '',
-        direccion: selected && selected.direction,
-        latitud: selected && selected.latitude,
-        longitud: selected && selected.longitude,
+        direccion: '',
+        latitud: '',
+        longitud: '',
         detail: '',
         clothing: '',
         appearance: ''
@@ -130,7 +134,9 @@ export const MForm = ({ selected, setSelected }) => {
           <Field type='date' name='date' placeholder='Fecha' className={styles.formField} />
           <ErrorMessage name='date' component='div' className='error' />
         </div>
-        <Map setSelected={setSelected} />
+        <Geolocation setLocationData={setLocationData} />
+
+        <Map locations={locations} />
         <div className={styles.contentForm}>
           <label htmlFor='detail'>Detalle</label>
           <Field type='text' name='detail' placeholder='Detalle' className={styles.formField} />

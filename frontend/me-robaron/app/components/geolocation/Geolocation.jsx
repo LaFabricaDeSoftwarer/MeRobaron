@@ -1,13 +1,10 @@
-/* eslint-disable no-unused-vars */
-'use client'
 import React, { useState } from 'react'
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng
 } from 'use-places-autocomplete'
-import styles from './styles.module.css'
 
-export default function Geolocation ({ setSelected }) {
+export default function Geolocation ({ setLocationData }) {
   const {
     ready,
     value,
@@ -24,7 +21,12 @@ export default function Geolocation ({ setSelected }) {
 
     const results = await getGeocode({ address })
     const { lat, lng } = await getLatLng(results[0])
-    setSelected({ lat, lng })
+    setLocationData({
+      direccion: address,
+      latitud: lat,
+      longitud: lng
+    })
+    console.log('setLocationData:', { direccion: address, latitud: lat, longitud: lng })
   }
 
   const handleInputChange = (e) => {
@@ -44,10 +46,9 @@ export default function Geolocation ({ setSelected }) {
         value={value}
         onChange={handleInputChange}
         disabled={!ready}
-        className={styles.input}
       />
       {showSuggestions && status === 'OK' && (
-        <div className={styles.suggestionList}>
+        <div>
           {data.map((item) => (
             <div
               key={item.place_id}

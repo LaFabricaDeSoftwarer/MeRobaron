@@ -36,7 +36,7 @@ export async function saveFormData (req, res) {
 
         if (location) {
           const locationObj = new Location(
-            location.direction,
+            location.direccion,
             location.latitud,
             location.longitud
           )

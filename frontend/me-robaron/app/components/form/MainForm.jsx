@@ -1,11 +1,11 @@
 import { Formik, Form } from 'formik'
 import { submitForm, fetchLocations } from '../../services/apiServices'
-import Map from '../geolocation/Map'
-import Geolocation from '../geolocation/Geolocation'
+// import Map from '../geolocation/Map'
+// import Geolocation from '../geolocation/Geolocation'
 import { useState, useEffect } from 'react'
 import PersonForm from '../personForm/personForm'
 import ReportForm from '../reportForm/ReportForm'
-// import * as yup from 'yup'
+import { validationSchema } from '../../utils/validationSchemas'
 
 export const MainForm = () => {
   const [locationData, setLocationData] = useState({
@@ -67,13 +67,12 @@ export const MainForm = () => {
         appearance: ''
       }}
       onSubmit={handleSubmit}
+      validationSchema={validationSchema}
 
     >
       <Form>
         <PersonForm />
-        <ReportForm />
-        <Geolocation setLocationData={setLocationData} />
-        <Map locations={locations} />
+        <ReportForm setLocationData={setLocationData} locations={locations} />
         <button type='submit'>Enviar</button>
       </Form>
     </Formik>

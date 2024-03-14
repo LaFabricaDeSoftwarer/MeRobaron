@@ -3,12 +3,14 @@ export class Report {
     date,
     reporterID,
     locationID,
-    detail
+    detail,
+    conozcoAlDenunciado = false
   ) {
     this.date = date
     this.reporterID = reporterID
     this.locationID = locationID
     this.detail = detail
+    this.conozcoAlDenunciado = conozcoAlDenunciado
   }
 
   save (db) {
@@ -18,11 +20,12 @@ export class Report {
           Fecha,
           DenuncianteID,
           DireccionID,
-          Detalle
-        ) VALUES (?, ?, ?, ?)
+          Detalle,
+          ConozcoAlDenunciado
+        ) VALUES (?, ?, ?, ?, ?)
       `
       db.query(insertDenunciaSql, [
-        this.date, this.reporterID, this.locationID, this.detail
+        this.date, this.reporterID, this.locationID, this.detail, this.conozcoAlDenunciado
       ], (err, result) => {
         if (err) {
           reject(err)

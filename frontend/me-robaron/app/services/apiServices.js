@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const submitForm = async (values) => {
   try {
-    const response = await axios.post('http://localhost:3001/formulario', {
+    const formData = {
       location: {
         direccion: values.direccion,
         latitud: values.latitud,
@@ -32,7 +32,9 @@ export const submitForm = async (values) => {
         clothing: values.clothing,
         appearance: values.appearance
       }
-    })
+    }
+
+    const response = await axios.post('http://localhost:3001/formulario', formData)
     return response.data
   } catch (error) {
     console.error('Error al enviar el formulario:', error)

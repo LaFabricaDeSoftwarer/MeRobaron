@@ -20,14 +20,9 @@ const ReportForm = ({ setLocationData, locations }) => (
       <ErrorMessage name='detail' component='div' className='error' />
     </div>
     <div className={styles.contentForm}>
-      <label htmlFor='clothing'>Vestimenta</label>
-      <Field type='text' name='clothing' placeholder='Vestimenta' className={styles.formField} />
-      <ErrorMessage name='clothing' component='div' className='error' />
-    </div>
-    <div className={styles.contentForm}>
-      <label htmlFor='appearance'>Apariencia</label>
-      <Field type='text' name='appearance' placeholder='Apariencia' className={styles.formField} />
-      <ErrorMessage name='appearance' component='div' className='error' />
+      <label htmlFor='aceptCondition'>Acepto las condiciones</label>
+      <Field type='checkbox' name='aceptCondition' className={styles.formField} />
+      <ErrorMessage name='aceptCondition' component='div' className='error' />
     </div>
   </>
 )

@@ -3,6 +3,7 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng
 } from 'use-places-autocomplete'
+import styles from './styles.module.css'
 
 export default function Geolocation ({ setLocationData }) {
   const {
@@ -46,6 +47,7 @@ export default function Geolocation ({ setLocationData }) {
         value={value}
         onChange={handleInputChange}
         disabled={!ready}
+        className={styles.inputSelect}
       />
       {showSuggestions && status === 'OK' && (
         <div>

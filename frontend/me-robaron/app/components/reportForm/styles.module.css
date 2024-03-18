@@ -12,3 +12,51 @@
     padding: 5px;
     border: 1px solid #ccc;
   }
+
+
+  /* styles.css */
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-step {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-step label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-step input,
+.form-step textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+.form-step button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.form-step button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-top: 5px;
+}

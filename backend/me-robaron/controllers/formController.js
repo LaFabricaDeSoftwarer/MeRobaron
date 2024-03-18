@@ -4,6 +4,8 @@ import { Person } from '../models/personModel.js'
 import { Report } from '../models/reportModel.js'
 import { Reporter } from '../models/reporterModel.js'
 import { Reported } from '../models/reportedModel.js'
+import { Victim } from '../models/victimModel.js'
+import { Witness } from '../models/witnessModel.js'
 import db from '../dbconfig.js'
 
 async function saveReporter (reporterData, db) {
@@ -67,11 +69,27 @@ async function saveReported (personID, reportID, reportedData, db) {
   return await reportedObj.save(db)
 }
 
+async function saveVictim (personID, reportID, victimData, db) {
+  const victimObj = new Victim(
+    personID,
+    reportID
+  )
+  return await victimObj.save(db)
+}
+
+async function saveWitness (personID, reportID, witnessData, db) {
+  const witnessObj = new Witness(
+    personID,
+    reportID
+  )
+  return await witnessObj.save(db)
+}
+
 export async function saveFormData (req, res) {
   try {
-    const { reporter, location, person, report, reported } = req.body
+    const { reporter, location, person, report, reported, victim, witness } = req.body
 
-    if (!reporter || !location || !person || !report || !reported) {
+    if (!reporter || !location || !person || !report || !reported || !victim || !witness) {
       return res.status(400).json({ error: 'Falta información requerida en el formulario.' })
     }
 
@@ -80,13 +98,17 @@ export async function saveFormData (req, res) {
     const personResult = await savePerson(person, db)
     const reportResult = await saveReport(report, reporterResult.id, locationResult.id, db)
     const reportedResult = await saveReported(personResult.id, reportResult.id, reported, db)
+    const victimResult = await saveVictim(personResult.id, reportResult.id, victim, db)
+    const witnessResult = await saveWitness(personResult.id, reportResult.id, witness, db)
 
     res.status(201).json({
       reporter: reporterResult,
       location: locationResult,
       person: personResult,
       report: reportResult,
-      reported: reportedResult
+      reported: reportedResult,
+      victim: victimResult,
+      witness: witnessResult
 
     })
   } catch (error) {

@@ -1,11 +1,11 @@
 'use client'
 import React from 'react'
-import { MainForm } from './components/form/MainForm'
+import FormMain from './components/form/FormMain'
 
 export default function Home () {
   return (
     <div>
-      <MainForm />
+      <FormMain />
     </div>
   )
 }

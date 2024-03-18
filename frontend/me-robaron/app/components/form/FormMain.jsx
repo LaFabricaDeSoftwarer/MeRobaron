@@ -20,6 +20,7 @@ const steps = ['Denunciante', 'Denunciado', 'Denuncia', 'Resumen y envio']
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
   const [locations, setLocations] = useState([])
+  const [showDenunciadoForm, setShowDenunciadoForm] = useState(false)
 
   // this function fetches the locations data from the api
   useEffect(() => {
@@ -73,7 +74,7 @@ const Form = () => {
       case 0:
         return <Reporter formik={formik} />
       case 1:
-        return <Reported formik={formik} />
+        return <Reported formik={formik} showDenunciadoForm={showDenunciadoForm} setShowDenunciadoForm={setShowDenunciadoForm} />
       case 2:
         return <Report formik={formik} />
       case 3:

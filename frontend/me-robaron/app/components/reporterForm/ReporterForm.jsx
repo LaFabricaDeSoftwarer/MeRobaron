@@ -2,70 +2,59 @@ import React from 'react'
 import {
   Grid,
   TextField,
-  FormControlLabel,
-  Checkbox,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Checkbox
 } from '@mui/material'
 
-const Reporter = (props) => {
-  const { formik } = props
-
+const Reporter = ({ formik }) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <TextField
-          name='email'
+          name='reporter.email'
           label='Email'
-          variant='outlined'
           fullWidth
-          size='small'
           onChange={formik.handleChange}
-          value={formik.values.email}
+          value={formik.values.reporter.email || ''}
+
         />
       </Grid>
-      <Grid item xs={12}>
-        <FormControlLabel
-          required
-          control={<Checkbox />}
-          label='Acepto condición'
-          name='aceptoCondicion'
-          onChange={formik.handleChange}
-          checked={formik.values.aceptoCondicion}
-        />
-      </Grid>
+      <Checkbox
+        checked={formik.values.conozcoAlDenunciado || false}
+        onChange={(event) => formik.setFieldValue('conozcoAlDenunciado', event.target.checked)}
+        inputProps={{ 'aria-label': 'controlled' }}
+      />
       <Grid item xs={12}>
         <TextField
-          name='apellido'
+          name='reporter.apellido'
           label='Apellido'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.apellido}
+          value={formik.values.reporter.apellido || ''}
+
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='nombre'
+          name='reporter.nombre'
           label='Nombre'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.nombre}
+          value={formik.values.reporter.nombre || ''}
+
         />
       </Grid>
       <Grid item xs={6}>
         <InputLabel id='tipoDocumento-label'>Tipo de Documento</InputLabel>
         <Select
-          name='tipoDocumento'
+          name='reporter.tipoDocumento'
           labelId='tipoDocumento-label'
           id='tipoDocumento'
-          value={formik.values.tipoDocumento || ''}
-          onChange={formik.handleChange}
           fullWidth
+          value={formik.values.reporter.tipoDocumento || ''}
+          onChange={formik.handleChange}
         >
           <MenuItem value={10}>DNI</MenuItem>
           <MenuItem value={20}>LC</MenuItem>
@@ -74,79 +63,72 @@ const Reporter = (props) => {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='nroDocumento'
+          name='reporter.nroDocumento'
           label='Numero de documento'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.nroDocumento}
+          value={formik.values.reporter.nroDocumento || ''}
+
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='edad'
+          name='reporter.edad'
           label='Edad'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.edad}
+          value={formik.values.reporter.edad || ''}
+
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='telefono'
+          name='reporter.telefono'
           label='Telefono'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.telefono}
+          value={formik.values.reporter.telefono || ''}
+
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='calle'
+          name='reporter.calle'
           label='Calle'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.calle}
+          value={formik.values.reporter.calle || ''}
+
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='numero'
+          name='reporter.numero'
           label='Numero'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.numero}
+          value={formik.values.reporter.numero || ''}
+
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='barrio'
+          name='reporter.barrio'
           label='Barrio'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.barrio}
+          value={formik.values.reporter.barrio || ''}
+
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='ciudad'
+          name='reporter.ciudad'
           label='Ciudad'
-          variant='outlined'
-          size='small'
           fullWidth
           onChange={formik.handleChange}
-          value={formik.values.ciudad}
+          value={formik.values.reporter.ciudad || ''}
+
         />
       </Grid>
     </Grid>
@@ -154,55 +136,3 @@ const Reporter = (props) => {
 }
 
 export default Reporter
-
-// import React from 'react'
-// import { Formik, Form, Field } from 'formik'
-// import { TextField, Button } from '@material-ui/core'
-// import { CheckboxWithLabel } from 'formik-material-ui'
-
-// const Reporter = () => {
-//   return (
-//     <Formik
-//       initialValues={{
-//         email: '',
-//         aceptoCondicion: false,
-//         apellido: '',
-//         nombre: '',
-//         tipoDocumento: '',
-//         nroDocumento: '',
-//         edad: '',
-//         telefono: '',
-//         calle: '',
-//         numero: '',
-//         barrio: '',
-//         ciudad: ''
-//       }}
-//       onSubmit={(values) => {
-//         console.log(values) // Aquí puedes hacer algo con los datos, como enviarlos al componente principal
-//       }}
-//     >
-//       <Form>
-//         <Field name='email' component={TextField} label='Email' variant='outlined' fullWidth margin='normal' />
-//         <Field
-//           name='aceptoCondicion' type='checkbox' component={CheckboxWithLabel}
-//           Label={{ label: 'Acepto condición' }} variant='outlined' fullWidth margin='normal'
-//         />
-//         <Field name='apellido' component={TextField} label='Apellido' variant='outlined' fullWidth margin='normal' />
-//         <Field name='nombre' component={TextField} label='Nombre' variant='outlined' fullWidth margin='normal' />
-//         <Field name='tipoDocumento' component={TextField} label='Tipo de documento' variant='outlined' fullWidth margin='normal' />
-//         <Field name='nroDocumento' component={TextField} label='Número de documento' variant='outlined' fullWidth margin='normal' />
-//         <Field name='edad' component={TextField} label='Edad' variant='outlined' fullWidth margin='normal' />
-//         <Field name='telefono' component={TextField} label='Teléfono' variant='outlined' fullWidth margin='normal' />
-//         <Field name='calle' component={TextField} label='Calle' variant='outlined' fullWidth margin='normal' />
-//         <Field name='numero' component={TextField} label='Número' variant='outlined' fullWidth margin='normal' />
-//         <Field name='barrio' component={TextField} label='Barrio' variant='outlined' fullWidth margin='normal' />
-//         <Field name='ciudad' component={TextField} label='Ciudad' variant='outlined' fullWidth margin='normal' />
-//         <Button type='submit' variant='contained' color='primary'>
-//           Guardar
-//         </Button>
-//       </Form>
-//     </Formik>
-//   )
-// }
-
-// export default Reporter

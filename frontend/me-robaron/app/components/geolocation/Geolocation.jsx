@@ -6,10 +6,10 @@ import usePlacesAutocomplete, {
 import styles from './styles.module.css'
 import { GoogleMap, Marker } from '@react-google-maps/api'
 
-export default function Geolocation ({ locations }) {
+export default function Geolocation ({ selectedLocation, setSelectedLocation }) {
   const center = { lat: -31.4167, lng: -64.1833 }
   const zoom = 12
-  const [selectedLocation, setSelectedLocation] = useState(null)
+  // const [selectedLocation, setSelectedLocation] = useState(null)
 
   const {
     ready,
@@ -69,11 +69,6 @@ export default function Geolocation ({ locations }) {
         )}
       </div>
       <GoogleMap mapContainerClassName={styles.mapContainer} zoom={zoom} center={center}>
-        {/* {locations.map((location) => (
-          (location.Latitud && location.Longitud) && (
-            <Marker key={location.DireccionID} position={{ lat: parseFloat(location.Latitud), lng: parseFloat(location.Longitud) }} />
-          )
-        ))} */}
         {selectedLocation && <Marker position={{ lat: selectedLocation.latitud, lng: selectedLocation.longitud }} />}
 
       </GoogleMap>

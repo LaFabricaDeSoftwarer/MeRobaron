@@ -12,17 +12,22 @@ import {
 import ReviewInfo from '../reviewInfo/ReviewInfo'
 import Reporter from '../reporterForm/ReporterForm'
 import Reported from '../reportedForm/ReportedForm'
-import Report from '../reportForm/FormReport'
-import { fetchLocations } from '../../services/apiServices'
+import Report from '../reportForm/ReportForm'
+import { fetchLocations, saveFormData } from '../../services/apiServices'
 
 const steps = ['Denunciante', 'Denunciado', 'Denuncia', 'Resumen y envio']
 
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
   const [locations, setLocations] = useState([])
+  const [selectedLocation, setSelectedLocation] = useState({
+    direccion: '',
+    latitud: 0,
+    longitud: 0
+
+  })
   const [showDenunciadoForm, setShowDenunciadoForm] = useState(false)
 
-  // this function fetches the locations data from the api
   useEffect(() => {
     const fetchLocationsData = async () => {
       try {
@@ -36,35 +41,62 @@ const Form = () => {
     fetchLocationsData()
   }, [])
 
+  useEffect(() => {
+    formik.setFieldValue('location', selectedLocation)
+  }, [selectedLocation])
+
   const handleBack = () => {
     setActiveStep((prevStep) => prevStep - 1)
   }
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      aceptoCondiciones: false,
-      apellido: '',
-      nombre: '',
-      tipoDocumento: '',
-      nroDocumento: '',
-      edad: '',
-      telefono: '',
-      calle: '',
-      numero: '',
-      barrio: '',
-      ciudad: '',
-      conozcoAlDenunciado: false,
-      vestimenta: '',
-      apariencia: '',
-      fecha: '',
-      detalle: ''
+      reporter: {
+        email: '',
+        aceptoCondicion: false,
+        apellido: '',
+        nombre: '',
+        tipoDocumento: '',
+        nroDocumento: 0,
+        edad: 0,
+        telefono: '',
+        calle: '',
+        numero: '',
+        barrio: '',
+        ciudad: ''
+      },
+      location: selectedLocation,
+      person: {
+        apellido: '',
+        nombre: '',
+        calle: '',
+        numero: '',
+        barrio: '',
+        ciudad: ''
+      },
+      report: {
+        fecha: '',
+        detalle: '',
+        conozcoAlDenunciado: false
+      },
+      reported: {
+        vestimenta: '',
+        apariencia: ''
+      },
+      victim: {
+        // Detalles de la víctima
+      },
+      witness: {
+        // Detalles del testigo
+      }
     },
-    onSubmit: () => {
-      if (activeStep === steps.length - 1) {
-        console.log('formik.values', formik.values)
-      } else {
-        setActiveStep((prevStep) => prevStep + 1)
+    onSubmit: async (values) => {
+      console.log('Valores enviados:', values)
+      try {
+        const data = await saveFormData(values)
+        console.log('Respuesta del servidor:', data)
+      } catch (error) {
+        console.error('Error al enviar la solicitud:', error)
       }
     }
   })
@@ -76,7 +108,7 @@ const Form = () => {
       case 1:
         return <Reported formik={formik} showDenunciadoForm={showDenunciadoForm} setShowDenunciadoForm={setShowDenunciadoForm} />
       case 2:
-        return <Report formik={formik} />
+        return <Report formik={formik} selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} />
       case 3:
         return <ReviewInfo formik={formik} locations={locations} />
       default:
@@ -121,12 +153,12 @@ const Form = () => {
           </Button>
           {activeStep === steps.length - 1
             ? (
-              <Button>
+              <Button onClick={formik.handleSubmit}>
                 Submit
               </Button>
               )
             : (
-              <Button onClick={formik.handleSubmit}>
+              <Button onClick={() => setActiveStep(prevStep => prevStep + 1)}>
                 Next
               </Button>
               )}

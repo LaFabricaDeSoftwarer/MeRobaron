@@ -1,44 +1,13 @@
 import axios from 'axios'
 
-export const submitForm = async (values) => {
-  try {
-    const formData = {
-      location: {
-        direccion: values.direccion,
-        latitud: values.latitud,
-        longitud: values.longitud
-      },
-      person: {
-        apellido: values.apellido,
-        nombre: values.nombre,
-        tipoDocumento: values.tipoDocumento,
-        nroDocumento: values.nroDocumento,
-        edad: values.edad,
-        telefono: values.telefono,
-        calle: values.calle,
-        numero: values.numero,
-        barrio: values.barrio,
-        ciudad: values.ciudad
-      },
-      report: {
-        date: values.date,
-        detail: values.detail
-      },
-      reporter: {
-        email: values.email,
-        aceptCondition: values.aceptCondition
-      },
-      reported: {
-        clothing: values.clothing,
-        appearance: values.appearance
-      }
-    }
+const baseURL = 'http://localhost:3001'
 
-    const response = await axios.post('http://localhost:3001/formulario', formData)
-    return response.data
+export async function saveFormData (formData) {
+  try {
+    const response = await axios.post(`${baseURL}/formulario`, formData)
+    return response.data // Devuelve los datos recibidos del servidor
   } catch (error) {
-    console.error('Error al enviar el formulario:', error)
-    throw new Error('Hubo un error al enviar el formulario')
+    throw new Error('Error al enviar la solicitud:', error)
   }
 }
 

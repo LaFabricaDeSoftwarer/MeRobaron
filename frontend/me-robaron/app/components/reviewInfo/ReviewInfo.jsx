@@ -23,7 +23,7 @@ const ReviewInfo = ({ formik, locations }) => {
         <ListItem>
           <ListItemText
             primary='Accepto Condicion'
-            secondary={values.aceptoCondicion ? 'Yes' : 'No'}
+            secondary={values.aceptoCondicion ? 'Si' : 'No'}
           />
         </ListItem>
 

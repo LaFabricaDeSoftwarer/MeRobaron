@@ -9,11 +9,11 @@ import {
   Button
 } from '@mui/material'
 
-import ReviewInfo from '../reviewInfo/ReviewInfo'
-import Reporter from '../reporterForm/ReporterForm'
+import ReviewInfo from './reviewInfo/ReviewInfo'
+import Reporter from './reporterForm/ReporterForm'
 // import Reported from '../reportedForm/ReportedForm'
-import PeopleInvolved from '../peopleInvolved/PeopleInvolved'
-import Report from '../reportForm/ReportForm'
+import PeopleInvolved from './peopleInvolved/PeopleInvolved'
+import Report from './reportForm/ReportForm'
 import { fetchLocations, saveFormData } from '../services/apiServices'
 
 const steps = ['Denunciante', 'Personas involucradas', 'Denuncia', 'Resumen y envio']

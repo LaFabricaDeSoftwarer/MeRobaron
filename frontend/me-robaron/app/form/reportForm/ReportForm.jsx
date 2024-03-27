@@ -1,6 +1,6 @@
 import React from 'react'
 import { TextField, Grid } from '@mui/material'
-import Geolocation from '../components/geolocation/Geolocation'
+import Geolocation from '../../components/geolocation/Geolocation'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'

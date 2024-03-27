@@ -11,11 +11,12 @@ import {
 
 import ReviewInfo from '../reviewInfo/ReviewInfo'
 import Reporter from '../reporterForm/ReporterForm'
-import Reported from '../reportedForm/ReportedForm'
+// import Reported from '../reportedForm/ReportedForm'
+import PeopleInvolved from '../peopleInvolved/PeopleInvolved'
 import Report from '../reportForm/ReportForm'
-import { fetchLocations, saveFormData } from '../../services/apiServices'
+import { fetchLocations, saveFormData } from '../services/apiServices'
 
-const steps = ['Denunciante', 'Denunciado', 'Denuncia', 'Resumen y envio']
+const steps = ['Denunciante', 'Personas involucradas', 'Denuncia', 'Resumen y envio']
 
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
@@ -27,6 +28,8 @@ const Form = () => {
 
   })
   const [showDenunciadoForm, setShowDenunciadoForm] = useState(false)
+  const [showVictimModal, setShowVictimModal] = useState(false)
+  const [showWitnessModal, setShowWitnessModal] = useState(false)
 
   useEffect(() => {
     const fetchLocationsData = async () => {
@@ -106,7 +109,17 @@ const Form = () => {
       case 0:
         return <Reporter formik={formik} />
       case 1:
-        return <Reported formik={formik} showDenunciadoForm={showDenunciadoForm} setShowDenunciadoForm={setShowDenunciadoForm} />
+        return (
+          <PeopleInvolved
+            formik={formik}
+            showDenunciadoForm={showDenunciadoForm}
+            setShowDenunciadoForm={setShowDenunciadoForm}
+            showWitnessModal={showWitnessModal}
+            setShowWitnessModal={setShowWitnessModal}
+            showVictimModal={showVictimModal}
+            setShowVictimModal={setShowVictimModal}
+          />
+        )
       case 2:
         return <Report formik={formik} selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} />
       case 3:
@@ -120,12 +133,13 @@ const Form = () => {
     <Box
       sx={{
         maxWidth: '600px',
-        padding: 2
+        padding: 2,
+        display: 'flex'
       }}
     >
       <Stepper
         activeStep={activeStep}
-        orientation='horizontal'
+        orientation='vertical'
       >
         {steps.map((label, index) => (
           <Step key={index}>

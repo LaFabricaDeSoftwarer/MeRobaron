@@ -1,18 +1,19 @@
 import React from 'react'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
 import styles from './styles.module.css'
-
-const Modal = ({ show, onClose, children }) => {
-  if (!show) {
-    return null
-  }
-
+const Modal = ({ open, onClose, children }) => {
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>Cerrar</button>
+    <Dialog open={open || false} onClose={onClose} className={styles.modalContent}>
+      <DialogTitle>Cerrar</DialogTitle>
+      <DialogContent>
         {children}
-      </div>
-    </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color='primary'>
+          Cerrar
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 

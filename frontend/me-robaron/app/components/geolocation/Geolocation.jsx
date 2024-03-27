@@ -5,14 +5,15 @@ import usePlacesAutocomplete, {
 } from 'use-places-autocomplete'
 import styles from './styles.module.css'
 import { GoogleMap, Marker } from '@react-google-maps/api'
+import TextField from '@mui/material/TextField'
+import Autocomplete from '@mui/material/Autocomplete'
 
-export default function Geolocation ({ selectedLocation, setSelectedLocation }) {
+export default function Geolocation ({ selectedLocation, setSelectedLocation, formik }) {
   const center = { lat: -31.4167, lng: -64.1833 }
   const zoom = 12
-  // const [selectedLocation, setSelectedLocation] = useState(null)
 
   const {
-    ready,
+    // ready,
     value,
     setValue,
     suggestions: { status, data },
@@ -25,19 +26,28 @@ export default function Geolocation ({ selectedLocation, setSelectedLocation }) 
     setValue(address, false)
     clearSuggestions()
 
-    const results = await getGeocode({ address })
-    const { lat, lng } = await getLatLng(results[0])
-    setSelectedLocation({
-      direccion: address,
-      latitud: lat,
-      longitud: lng
-    })
-    console.log('selected Location:', { direccion: address, latitud: lat, longitud: lng })
-  }
+    try {
+      const results = await getGeocode({ address })
 
-  const handleInputChange = (e) => {
-    setValue(e.target.value)
-    setShowSuggestions(true)
+      if (results && results.length > 0) {
+        const { lat, lng } = await getLatLng(results[0])
+        setSelectedLocation({
+          direccion: address,
+          latitud: lat,
+          longitud: lng
+        })
+        formik.setFieldValue('location', {
+          direccion: address,
+          latitud: lat,
+          longitud: lng
+        })
+        console.log('selected Location:', { direccion: address, latitud: lat, longitud: lng })
+      } else {
+        console.error('No se encontraron resultados para la dirección proporcionada:', address)
+      }
+    } catch (error) {
+      console.error('Error al obtener la geocodificación:', error)
+    }
   }
 
   const handleSuggestionClick = (address) => {
@@ -48,26 +58,39 @@ export default function Geolocation ({ selectedLocation, setSelectedLocation }) 
 
   return (
     <>
-      <div>
-        <input
-          value={value}
-          onChange={handleInputChange}
-          disabled={!ready}
-          className={styles.inputSelect}
-        />
-        {showSuggestions && status === 'OK' && (
-          <div>
-            {data.map((item) => (
-              <div
-                key={item.place_id}
-                onClick={() => handleSuggestionClick(item.description)}
-              >
-                {item.description}
-              </div>
-            ))}
-          </div>
+      <Autocomplete
+        value={value || ''}
+        onChange={(event, newValue) => {
+          setValue(newValue, false)
+          handleSelect(newValue)
+        }}
+        inputValue={value || ''}
+        onInputChange={(event, newInputValue) => {
+          setValue(newInputValue)
+          setShowSuggestions(true)
+        }}
+        options={data.map((option) => option.description)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label='Buscar dirección'
+            variant='outlined'
+            className={styles.inputSelect}
+          />
         )}
-      </div>
+        disableClearable
+      />
+      {showSuggestions && status === 'OK' && data && (
+        <div>
+          {data.map((item) => (
+            <div
+              key={item.place_id}
+              onClick={() => handleSuggestionClick(item.description)}
+            />
+          ))}
+        </div>
+      )}
+
       <GoogleMap mapContainerClassName={styles.mapContainer} zoom={zoom} center={center}>
         {selectedLocation && <Marker position={{ lat: selectedLocation.latitud, lng: selectedLocation.longitud }} />}
 

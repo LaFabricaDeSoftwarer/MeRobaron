@@ -3,23 +3,28 @@ import db from '../dbconfig.js'
 
 export const saveLocation = (req, res) => {
   const { direccion, latitud, longitud } = req.body
-  // creo instancia de Location para representar la nueva ubicación que se va a guardar en la base de datos.
+
+  if (!direccion || !latitud || !longitud) {
+    return res.status(400).json({ error: 'Los datos de ubicación son inválidos o incompletos' })
+  }
+
   const location = new Location(direccion, latitud, longitud)
+
   location.save(db, (err, result) => {
     if (err) {
       console.error('Error al insertar datos en la base de datos:', err)
 
-      // Manejar específicamente el error de entrada duplicada
       if (err.code === 'ER_DUP_ENTRY') {
-        return result.status(400).json({ error: 'Entrada duplicada en la base de datos' })
+        return res.status(400).json({ error: 'La ubicación ya existe en la base de datos' })
       }
+
       console.error('Consulta SQL fallida:', err.sql)
 
-      result.status(500).json({ error: 'Error interno del servidor' })
-    } else {
-      console.log('Datos insertados correctamente en la base de datos', result)
-      res.json({ message: 'Datos recibidos correctamente' })
+      return res.status(500).json({ error: 'Error interno del servidor' })
     }
+
+    console.log('Datos insertados correctamente en la base de datos', result)
+    res.json({ message: 'Ubicación guardada correctamente' })
   })
 }
 

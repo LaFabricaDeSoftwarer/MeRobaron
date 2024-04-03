@@ -11,6 +11,16 @@ export async function saveFormData (formData) {
   }
 }
 
+export async function saveLocation (locationData) {
+  try {
+    const response = await axios.post(`${baseURL}/direcciones`, locationData)
+    console.log('Ubicación guardada exitosamente:', response.data)
+    return response.data
+  } catch (error) {
+    throw new Error('Error al enviar la solicitud:', error)
+  }
+}
+
 export const fetchLocations = async () => {
   try {
     const response = await axios.get('http://localhost:3001/direcciones')

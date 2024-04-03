@@ -4,8 +4,13 @@ import Geolocation from '../../components/geolocation/Geolocation'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { GoogleMap, Marker } from '@react-google-maps/api'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import dayjs from 'dayjs'
+import styles from './styles.module.css'
+const center = { lat: -31.4167, lng: -64.1833 }
+const zoom = 12
+
 const Report = ({ formik, selectedLocation, setSelectedLocation }) => {
   const formatFecha = (date) => {
     return dayjs(date).format('YYYY-MM-DD')
@@ -37,6 +42,10 @@ const Report = ({ formik, selectedLocation, setSelectedLocation }) => {
       </Grid>
       <Grid item xs={12}>
         <Geolocation selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} formik={formik} />
+        <GoogleMap mapContainerClassName={styles.mapContainer} zoom={zoom} center={center}>
+          {selectedLocation && <Marker position={{ lat: selectedLocation.latitud, lng: selectedLocation.longitud }} />}
+
+        </GoogleMap>
       </Grid>
     </Grid>
   )

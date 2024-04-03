@@ -4,16 +4,10 @@ import usePlacesAutocomplete, {
   getLatLng
 } from 'use-places-autocomplete'
 import styles from './styles.module.css'
-import { GoogleMap, Marker } from '@react-google-maps/api'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+// import { GoogleMap, Marker } from '@react-google-maps/api';
 
-export default function Geolocation ({ selectedLocation, setSelectedLocation, formik }) {
-  const center = { lat: -31.4167, lng: -64.1833 }
-  const zoom = 12
-
+export default function Geolocation ({ setSelectedLocation, formik }) {
   const {
-    // ready,
     value,
     setValue,
     suggestions: { status, data },
@@ -50,6 +44,11 @@ export default function Geolocation ({ selectedLocation, setSelectedLocation, fo
     }
   }
 
+  const handleInputChange = (event) => {
+    setValue(event.target.value)
+    setShowSuggestions(true)
+  }
+
   const handleSuggestionClick = (address) => {
     setValue(address, false)
     setShowSuggestions(false)
@@ -58,27 +57,12 @@ export default function Geolocation ({ selectedLocation, setSelectedLocation, fo
 
   return (
     <>
-      <Autocomplete
-        value={value || ''}
-        onChange={(event, newValue) => {
-          setValue(newValue, false)
-          handleSelect(newValue)
-        }}
-        inputValue={value || ''}
-        onInputChange={(event, newInputValue) => {
-          setValue(newInputValue)
-          setShowSuggestions(true)
-        }}
-        options={data.map((option) => option.description)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='Buscar dirección'
-            variant='outlined'
-            className={styles.inputSelect}
-          />
-        )}
-        disableClearable
+      <input
+        type='text'
+        value={value}
+        onChange={handleInputChange}
+        className={styles.inputSelect}
+        placeholder='Buscar dirección'
       />
       {showSuggestions && status === 'OK' && data && (
         <div>
@@ -86,15 +70,12 @@ export default function Geolocation ({ selectedLocation, setSelectedLocation, fo
             <div
               key={item.place_id}
               onClick={() => handleSuggestionClick(item.description)}
-            />
+            >
+              {item.description}
+            </div>
           ))}
         </div>
       )}
-
-      <GoogleMap mapContainerClassName={styles.mapContainer} zoom={zoom} center={center}>
-        {selectedLocation && <Marker position={{ lat: selectedLocation.latitud, lng: selectedLocation.longitud }} />}
-
-      </GoogleMap>
     </>
   )
 }

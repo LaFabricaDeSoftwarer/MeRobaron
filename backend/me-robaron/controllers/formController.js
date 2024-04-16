@@ -4,81 +4,113 @@ import { Person } from '../models/personModel.js'
 import { Report } from '../models/reportModel.js'
 import { Reporter } from '../models/reporterModel.js'
 import { Reported } from '../models/reportedModel.js'
+import { Victim } from '../models/victimModel.js'
+import { Witness } from '../models/witnessModel.js'
 import db from '../dbconfig.js'
+
+async function saveReporter (reporterData, db) {
+  const reporterObj = new Reporter(
+    reporterData.email,
+    reporterData.aceptoCondicion,
+    reporterData.apellido,
+    reporterData.nombre,
+    reporterData.tipoDocumento,
+    reporterData.nroDocumento,
+    reporterData.edad,
+    reporterData.telefono,
+    reporterData.calle,
+    reporterData.numero,
+    reporterData.barrio,
+    reporterData.ciudad
+
+  )
+  return await reporterObj.save(db)
+}
+
+async function saveLocation (locationData, db) {
+  const locationObj = new Location(
+    locationData.direccion,
+    locationData.latitud,
+    locationData.longitud
+  )
+  return await locationObj.save(db)
+}
+
+async function saveReport (reportData, reporterID, locationID, db) {
+  const reportObj = new Report(
+    reporterID,
+    reportData.fecha,
+    locationID,
+    reportData.detalle,
+    reportData.conozcoAlDenunciado
+  )
+  return await reportObj.save(db)
+}
+
+async function savePerson (personData, db) {
+  const personObj = new Person(
+    personData.apellido,
+    personData.nombre,
+    personData.calle,
+    personData.numero,
+    personData.barrio,
+    personData.ciudad
+  )
+  return await personObj.save(db)
+}
+
+async function saveReported (personID, reportID, reportedData, db) {
+  const reportedObj = new Reported(
+    personID,
+    reportID,
+    reportedData.vestimenta,
+    reportedData.apariencia
+  )
+  return await reportedObj.save(db)
+}
+
+async function saveVictim (personID, reportID, victimData, db) {
+  const victimObj = new Victim(
+    personID,
+    reportID
+  )
+  return await victimObj.save(db)
+}
+
+async function saveWitness (personID, reportID, witnessData, db) {
+  const witnessObj = new Witness(
+    personID,
+    reportID
+  )
+  return await witnessObj.save(db)
+}
 
 export async function saveFormData (req, res) {
   try {
-    const { location, person, report, reporter, reported } = req.body
+    const { reporter, location, person, report, reported, victim, witness } = req.body
 
-    if (person) {
-      const personObj = new Person(
-        person.apellido,
-        person.nombre,
-        person.tipoDocumento,
-        person.nroDocumento,
-        person.edad,
-        person.telefono,
-        person.calle,
-        person.numero,
-        person.barrio,
-        person.ciudad
-      )
-      const personResult = await personObj.save(db)
-
-      if (reporter) {
-        person.personaID = personResult.id
-        const reporterObj = new Reporter(
-          person.personaID,
-          reporter.email,
-          reporter.aceptCondition
-        )
-        const reporterResult = await reporterObj.save(db)
-
-        if (location) {
-          const locationObj = new Location(
-            location.direction,
-            location.latitud,
-            location.longitud
-          )
-          const locationResult = await locationObj.save(db)
-
-          if (report) {
-            report.direccionID = locationResult.id
-            const reportObj = new Report(
-              report.date,
-              reporterResult.id,
-              report.direccionID,
-              report.detail
-            )
-            const reportResult = await reportObj.save(db)
-
-            if (reported) {
-              reported.personaID = personResult.id
-              reported.denunciaID = reportResult.id
-              const reportedObj = await new Reported(
-                reported.personaID,
-                reported.denunciaID,
-                reported.clothing,
-                reported.appearance
-              )
-
-              const reportedResult = await reportedObj.save(db)
-
-              // Envía una respuesta al frontend
-              res.status(201).json({
-                location: locationResult,
-                person: personResult,
-                report: reportResult,
-                reporter: reporterResult,
-                reported: reportedResult
-              })
-              return
-            }
-          }
-        }
-      }
+    if (!reporter || !location || !person || !report || !reported || !victim || !witness) {
+      return res.status(400).json({ error: 'Falta información requerida en el formulario.' })
     }
-    return res.status(400).json({ error: 'Falta información requerida en el formulario.' })
+
+    const reporterResult = await saveReporter(reporter, db)
+    const locationResult = await saveLocation(location, db)
+    const personResult = await savePerson(person, db)
+    const reportResult = await saveReport(report, reporterResult.id, locationResult.id, db)
+    const reportedResult = await saveReported(personResult.id, reportResult.id, reported, db)
+    const victimResult = await saveVictim(personResult.id, reportResult.id, victim, db)
+    const witnessResult = await saveWitness(personResult.id, reportResult.id, witness, db)
+
+    res.status(201).json({
+      reporter: reporterResult,
+      location: locationResult,
+      person: personResult,
+      report: reportResult,
+      reported: reportedResult,
+      victim: victimResult,
+      witness: witnessResult
+
+    })
   } catch (error) {
     console.error('Error al guardar en la base de datos:', error)
     res.status(500).json({ error: 'Hubo un error al procesar la solicitud' })

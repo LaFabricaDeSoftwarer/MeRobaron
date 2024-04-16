@@ -1,20 +1,24 @@
-/* eslint-disable no-unused-vars */
-'use client'
 import React, { useState } from 'react'
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng
 } from 'use-places-autocomplete'
-import styles from './styles.module.css'
+import SearchInput from '../SearchInput'
+import Suggestions from '../Suggestions'
 
-export default function Geolocation ({ setSelected }) {
+export default function Geolocation ({ setSelectedLocation, formik }) {
   const {
-    ready,
     value,
     setValue,
     suggestions: { status, data },
     clearSuggestions
-  } = usePlacesAutocomplete()
+  } = usePlacesAutocomplete(
+    {
+      requestOptions: {
+        componentRestrictions: { country: 'ar' }
+      }
+    }
+  )
 
   const [showSuggestions, setShowSuggestions] = useState(false)
 
@@ -22,13 +26,26 @@ export default function Geolocation ({ setSelected }) {
     setValue(address, false)
     clearSuggestions()
 
-    const results = await getGeocode({ address })
-    const { lat, lng } = await getLatLng(results[0])
-    setSelected({ lat, lng })
+    try {
+      const results = await getGeocode({ address })
+
+      if (results && results.length > 0) {
+        const { lat, lng } = await getLatLng(results[0])
+        const location = { direccion: address, latitud: lat, longitud: lng }
+
+        setSelectedLocation(location)
+        formik.setFieldValue('location', location)
+        console.log('selected Location:', location)
+      } else {
+        console.error('No se encontraron resultados para la dirección proporcionada:', address)
+      }
+    } catch (error) {
+      console.error('Error al obtener la geocodificación:', error)
+    }
   }
 
-  const handleInputChange = (e) => {
-    setValue(e.target.value)
+  const handleInputChange = (event) => {
+    setValue(event.target.value)
     setShowSuggestions(true)
   }
 
@@ -39,25 +56,11 @@ export default function Geolocation ({ setSelected }) {
   }
 
   return (
-    <div>
-      <input
-        value={value}
-        onChange={handleInputChange}
-        disabled={!ready}
-        className={styles.input}
-      />
-      {showSuggestions && status === 'OK' && (
-        <div className={styles.suggestionList}>
-          {data.map((item) => (
-            <div
-              key={item.place_id}
-              onClick={() => handleSuggestionClick(item.description)}
-            >
-              {item.description}
-            </div>
-          ))}
-        </div>
+    <>
+      <SearchInput value={value} onChange={handleInputChange} />
+      {showSuggestions && status === 'OK' && data && (
+        <Suggestions suggestions={data} handleSuggestionClick={handleSuggestionClick} />
       )}
-    </div>
+    </>
   )
 }

@@ -1,28 +1,31 @@
 export class Report {
   constructor (
-    date,
     reporterID,
+    fecha,
     locationID,
-    detail
+    detalle,
+    conozcoAlDenunciado = false
   ) {
-    this.date = date
+    this.fecha = fecha
     this.reporterID = reporterID
     this.locationID = locationID
-    this.detail = detail
+    this.detalle = detalle
+    this.conozcoAlDenunciado = conozcoAlDenunciado
   }
 
   save (db) {
     return new Promise((resolve, reject) => {
       const insertDenunciaSql = `
         INSERT INTO Denuncia (
-          Fecha,
           DenuncianteID,
+          Fecha,
           DireccionID,
-          Detalle
-        ) VALUES (?, ?, ?, ?)
+          Detalle,
+          ConozcoAlDenunciado
+        ) VALUES (?, ?, ?, ?, ?)
       `
       db.query(insertDenunciaSql, [
-        this.date, this.reporterID, this.locationID, this.detail
+        this.reporterID, this.fecha, this.locationID, this.detalle, this.conozcoAlDenunciado
       ], (err, result) => {
         if (err) {
           reject(err)

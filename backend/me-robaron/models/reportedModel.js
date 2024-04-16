@@ -2,13 +2,13 @@ export class Reported {
   constructor (
     personID,
     reportID,
-    clothing,
-    appearance
+    vestimenta,
+    apariencia
   ) {
     this.personID = personID
     this.reportID = reportID
-    this.clothing = clothing
-    this.appearance = appearance
+    this.vestimenta = vestimenta
+    this.apariencia = apariencia
   }
 
   save (db) {
@@ -22,7 +22,7 @@ export class Reported {
             ) VALUES (?, ?, ?, ?)
         `
       db.query(insertReportedSql, [
-        this.personID, this.reportID, this.clothing, this.appearance
+        this.personID, this.reportID, this.vestimenta, this.apariencia
       ], (err, result) => {
         if (err) {
           reject(err)

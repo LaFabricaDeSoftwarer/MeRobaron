@@ -1,10 +1,9 @@
 import React from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
-import styles from './styles.module.css'
+import { Dialog, DialogContent, DialogActions, Button } from '@mui/material'
+// import styles from './styles.module.css'
 const Modal = ({ open, onClose, children }) => {
   return (
-    <Dialog open={open || false} onClose={onClose} className={styles.modalContent}>
-      <DialogTitle>Cerrar</DialogTitle>
+    <Dialog open={open || false} onClose={onClose}>
       <DialogContent>
         {children}
       </DialogContent>

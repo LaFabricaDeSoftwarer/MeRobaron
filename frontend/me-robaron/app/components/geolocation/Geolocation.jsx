@@ -3,8 +3,8 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng
 } from 'use-places-autocomplete'
-import styles from './styles.module.css'
-// import { GoogleMap, Marker } from '@react-google-maps/api';
+import SearchInput from '../SearchInput'
+import Suggestions from '../Suggestions'
 
 export default function Geolocation ({ setSelectedLocation, formik }) {
   const {
@@ -12,7 +12,13 @@ export default function Geolocation ({ setSelectedLocation, formik }) {
     setValue,
     suggestions: { status, data },
     clearSuggestions
-  } = usePlacesAutocomplete()
+  } = usePlacesAutocomplete(
+    {
+      requestOptions: {
+        componentRestrictions: { country: 'ar' }
+      }
+    }
+  )
 
   const [showSuggestions, setShowSuggestions] = useState(false)
 
@@ -25,17 +31,11 @@ export default function Geolocation ({ setSelectedLocation, formik }) {
 
       if (results && results.length > 0) {
         const { lat, lng } = await getLatLng(results[0])
-        setSelectedLocation({
-          direccion: address,
-          latitud: lat,
-          longitud: lng
-        })
-        formik.setFieldValue('location', {
-          direccion: address,
-          latitud: lat,
-          longitud: lng
-        })
-        console.log('selected Location:', { direccion: address, latitud: lat, longitud: lng })
+        const location = { direccion: address, latitud: lat, longitud: lng }
+
+        setSelectedLocation(location)
+        formik.setFieldValue('location', location)
+        console.log('selected Location:', location)
       } else {
         console.error('No se encontraron resultados para la dirección proporcionada:', address)
       }
@@ -57,24 +57,9 @@ export default function Geolocation ({ setSelectedLocation, formik }) {
 
   return (
     <>
-      <input
-        type='text'
-        value={value}
-        onChange={handleInputChange}
-        className={styles.inputSelect}
-        placeholder='Buscar dirección'
-      />
+      <SearchInput value={value} onChange={handleInputChange} />
       {showSuggestions && status === 'OK' && data && (
-        <div>
-          {data.map((item) => (
-            <div
-              key={item.place_id}
-              onClick={() => handleSuggestionClick(item.description)}
-            >
-              {item.description}
-            </div>
-          ))}
-        </div>
+        <Suggestions suggestions={data} handleSuggestionClick={handleSuggestionClick} />
       )}
     </>
   )

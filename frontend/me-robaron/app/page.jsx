@@ -21,6 +21,10 @@ const Home = () => {
   const Map = GoogleMap
   const center = { lat: -31.4167, lng: -64.1833 }
   const zoom = 12
+  // const [mapStatus, setMapStatus] = useState({
+  //   center: { lat: -31.4167, lng: -64.1833 },
+  //   zoom: 12,
+  // })
   const [selectedLocation, setSelectedLocation] = useState({
     direccion: '',
     latitud: 0,
@@ -109,18 +113,23 @@ const Home = () => {
   }, [])
   return (
     <main className='flex flex-col md:flex-row justify-center items-center w-full h-full'>
-      <section className='bg-dark w-full h-full  flex flex-col items-center justify-center gap-3 py-8'>
-        <h1 className='md:text-5xl text-3xl text-white md:pb-40 text-center'>¿Dónde te robaron?</h1>
-        <SearchInput value={autocompleteValue} onChange={handleInputChange} onClear={handleClearInput} />
-        {showSuggestions && autocompleteStatus === GooglePlacesServiceStatus.OK /* && autocompleteData */ && (
-          <Suggestions suggestions={autocompleteData} handleSuggestionClick={handleSuggestionClick} />
-        )}
-        <Button text='Marcar en el mapa' onClick={handleSaveLocation} />
+      <section className='bg-dark md:w-1/2 w-full md:h-full h-1/4 flex flex-col items-center justify-center gap-10 py-8'>
+        <h1 className='md:text-5xl text-3xl text-white text-center px-6'>¿Dónde te robaron?</h1>
+        <div className='flex justify-center items-center gap-2 md:w-96 w-64 px-6'>
+          <div className='w-full'>
+            <SearchInput value={autocompleteValue} onChange={handleInputChange} onClear={handleClearInput} />
+            {showSuggestions && autocompleteStatus === GooglePlacesServiceStatus.OK /* && autocompleteData */ && (
+              <Suggestions suggestions={autocompleteData} handleSuggestionClick={handleSuggestionClick} />
+            )}
+          </div>
+          <Button text='Registrar' onClick={handleSaveLocation} />
+        </div>
         <ActionNotification />
       </section>
-      <section className='w-full h-full'>
+      <section className='md:w-1/2 w-full md:h-full h-3/4'>
         <Map
-          mapContainerClassName={styles.mapContainer} zoom={zoom} center={center} options={{
+          mapContainerClassName={styles.mapContainer} zoom={selectedLocation.latitud !== 0 ? zoom * 1.1 : zoom}
+          center={selectedLocation.latitud !== 0 ? { lat: selectedLocation.latitud, lng: selectedLocation.longitud } : center} options={{
             disableDefaultUI: true
           }}
         >

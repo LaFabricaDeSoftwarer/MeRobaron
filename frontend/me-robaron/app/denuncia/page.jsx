@@ -1,14 +1,6 @@
+'use client'
 import React, { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
-import {
-  Box,
-  Stepper,
-  Step,
-  StepLabel,
-  Grid,
-  Button
-} from '@mui/material'
-
 import ReviewInfo from './reviewInfo/ReviewInfo'
 import Reporter from './reporterForm/ReporterForm'
 // import Reported from '../reportedForm/ReportedForm'
@@ -16,7 +8,12 @@ import PeopleInvolved from './peopleInvolved/PeopleInvolved'
 import Report from './reportForm/ReportForm'
 import { fetchLocations, saveFormData } from '../services/apiServices'
 
-const steps = ['Denunciante', 'Personas involucradas', 'Denuncia', 'Resumen y envio']
+const steps = [
+  'Denunciante',
+  'Personas involucradas',
+  'Denuncia',
+  'Resumen y envio'
+]
 
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
@@ -25,7 +22,6 @@ const Form = () => {
     direccion: '',
     latitud: 0,
     longitud: 0
-
   })
   const [showDenunciadoForm, setShowDenunciadoForm] = useState(false)
   const [showVictimModal, setShowVictimModal] = useState(false)
@@ -121,7 +117,13 @@ const Form = () => {
           />
         )
       case 2:
-        return <Report formik={formik} selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} />
+        return (
+          <Report
+            formik={formik}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+          />
+        )
       case 3:
         return <ReviewInfo formik={formik} locations={locations} />
       default:
@@ -130,55 +132,64 @@ const Form = () => {
   }
 
   return (
-    <Box
-      sx={{
-        maxWidth: '600px',
-        padding: 2,
-        display: 'flex'
-      }}
-    >
-      <Stepper
-        activeStep={activeStep}
-        orientation='vertical'
-      >
-        {steps.map((label, index) => (
-          <Step key={index}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <Grid container>
-        <Grid
-          item
-          xs={12}
-          sx={{ padding: '20px' }}
+    <section className='bg-dark h-full flex flex-col justify-center items-center p-5'>
+      <div className='flex md:flex-row w-full md:h-4/5 justify-center items-center flex-col h-full  max-w-5xl my-0 mx-auto'>
+        <div className='md:w-56 h-20 w-full md:h-full border-r-2 border-r-medium'>
+          <ul className='w-full flex md:flex-col space-y-4'>
+            {steps.map((label, index) => (
+              <li
+                key={index}
+                className={`flex items-center rounded-t-md px-4 py-2 font-medium ${
+                  index === activeStep
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200'
+                }`}
+              >
+                <span
+                  className={`rounded-full px-2 text-sm text-white bg-${
+                    index === activeStep ? 'green' : 'trasnsparent'
+                  }`}
+                >
+                  {index + 1}
+                </span>
+                <span className='px-2 text-sm text-white'>{label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className='h-full w-full '>
+          <div className='flex-grow p-2 h-full'>
+            {formContent(activeStep)}
+          </div>
+        </div>
+      </div>
+      <div className='flex justify-between w-full mt-2  max-w-5xl my-0 mx-auto'>
+        <button
+          className='bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
+          disabled={activeStep === 0}
+          onClick={handleBack}
         >
-          {formContent(activeStep)}
-        </Grid>
-        <Grid
-          item
-          xs={12}
-        >
-          <Button
-            disabled={activeStep === 0}
-            onClick={handleBack}
-          >
-            Back
-          </Button>
-          {activeStep === steps.length - 1
-            ? (
-              <Button onClick={formik.handleSubmit}>
-                Submit
-              </Button>
-              )
-            : (
-              <Button onClick={() => setActiveStep(prevStep => prevStep + 1)}>
-                Next
-              </Button>
-              )}
-        </Grid>
-      </Grid>
-    </Box>
+          Atrás
+        </button>
+        {activeStep === steps.length - 1
+          ? (
+            <button
+              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+              onClick={formik.handleSubmit}
+            >
+              Enviar
+            </button>
+            )
+          : (
+            <button
+              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+              onClick={() => setActiveStep((prevStep) => prevStep + 1)}
+            >
+              Siguiente
+            </button>
+            )}
+      </div>
+    </section>
   )
 }
 

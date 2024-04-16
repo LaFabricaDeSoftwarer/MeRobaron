@@ -13,7 +13,9 @@ export async function saveFormData (formData) {
 
 export async function saveLocation (locationData) {
   try {
-    const response = await axios.post(`${baseURL}/direcciones`, locationData)
+    const response = await axios.post(`${baseURL}/direcciones`, {
+      location: locationData
+    })
     console.log('Ubicación guardada exitosamente:', response.data)
     return response.data
   } catch (error) {

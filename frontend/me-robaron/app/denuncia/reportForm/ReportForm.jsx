@@ -7,18 +7,15 @@ const zoom = 12
 
 const Report = ({ formik, selectedLocation, setSelectedLocation }) => {
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 h-full'>
+    <section className='grid grid-cols-1 md:grid-cols-2 gap-4 h-full'>
       <div className='col-span-1 md:col-span-2'>
-        <div className='relative'>
-          <input
-            type='date'
-            value={formik.values.report.fecha || ''}
-            onChange={(e) => formik.setFieldValue('report.fecha', e.target.value)}
-            className='w-full px-3 py-2 text-white leading-tight focus:outline-none focus:shadow-outline rounded-md bg-medium appearance-none'
-          />
-        </div>
+        <input
+          type='date'
+          value={formik.values.report.fecha || ''}
+          onChange={(e) => formik.setFieldValue('report.fecha', e.target.value)}
+          className='w-full px-3 py-2 text-white leading-tight focus:outline-none focus:shadow-outline rounded-md bg-medium appearance-none'
+        />
       </div>
-
       <div className='col-span-1'>
         <label className='block text-white text-sm pb-2'>Detalle</label>
         <input
@@ -41,7 +38,7 @@ const Report = ({ formik, selectedLocation, setSelectedLocation }) => {
           {selectedLocation && <Marker position={{ lat: selectedLocation.latitud, lng: selectedLocation.longitud }} />}
         </GoogleMap>
       </div>
-    </div>
+    </section>
   )
 }
 

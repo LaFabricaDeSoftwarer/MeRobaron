@@ -8,7 +8,7 @@ const PeopleInvolved = ({ formik, showDenunciadoForm, setShowDenunciadoForm, sho
   }
 
   return (
-    <div className='grid grid-cols-1 gap-4 pl-2'>
+    <section className='grid grid-cols-1 gap-4 pl-2'>
       <div className='flex gap-2 '>
         <label className='block text-white text-sm pb-2'>Conozco al denunciado</label>
         <input
@@ -91,7 +91,7 @@ const PeopleInvolved = ({ formik, showDenunciadoForm, setShowDenunciadoForm, sho
           </div>
         </div>
       )}
-    </div>
+    </section>
   )
 }
 

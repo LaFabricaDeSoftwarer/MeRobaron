@@ -21,10 +21,6 @@ const Home = () => {
   const Map = GoogleMap
   const center = { lat: -31.4167, lng: -64.1833 }
   const zoom = 12
-  // const [mapStatus, setMapStatus] = useState({
-  //   center: { lat: -31.4167, lng: -64.1833 },
-  //   zoom: 12,
-  // })
   const [selectedLocation, setSelectedLocation] = useState({
     direccion: '',
     latitud: 0,
@@ -113,10 +109,10 @@ const Home = () => {
   }, [])
   return (
     <main className='flex flex-col md:flex-row justify-center items-center w-full h-full'>
-      <section className='bg-dark md:w-1/2 w-full md:h-full h-1/4 flex flex-col items-center justify-center gap-10 py-8'>
+      <section className='bg-dark md:w-1/2 w-full md:h-full h-2/4 flex flex-col items-center md:justify-center justify-start md:gap-10 gap-2 py-8'>
         <h1 className='md:text-5xl text-3xl text-white text-center px-6'>¿Dónde te robaron?</h1>
-        <div className='flex justify-center items-center gap-2 md:w-96 w-64 px-6'>
-          <div className='w-full'>
+        <div className='flex justify-center items-center gap-2 md:w-96 w-72 px-6'>
+          <div className='w-full relative'>
             <SearchInput value={autocompleteValue} onChange={handleInputChange} onClear={handleClearInput} />
             {showSuggestions && autocompleteStatus === GooglePlacesServiceStatus.OK /* && autocompleteData */ && (
               <Suggestions suggestions={autocompleteData} handleSuggestionClick={handleSuggestionClick} />

@@ -132,8 +132,8 @@ const Form = () => {
   }
 
   return (
-    <section className='bg-dark h-full flex flex-col justify-center items-center p-5'>
-      <div className='flex md:flex-row w-full md:h-4/5 justify-center items-center flex-col h-full  max-w-5xl my-0 mx-auto'>
+    <main className='bg-dark h-full flex flex-col justify-center items-center p-5'>
+      <section className='flex md:flex-row w-full md:h-4/5 justify-center items-center flex-col h-full  max-w-5xl my-0 mx-auto'>
         <div className='md:w-56 h-20 w-full md:h-full border-r-2 border-r-medium'>
           <ul className='w-full flex md:flex-col space-y-4'>
             {steps.map((label, index) => (
@@ -157,13 +157,11 @@ const Form = () => {
             ))}
           </ul>
         </div>
-        <div className='h-full w-full '>
-          <div className='flex-grow p-2 h-full'>
-            {formContent(activeStep)}
-          </div>
-        </div>
-      </div>
-      <div className='flex justify-between w-full mt-2  max-w-5xl my-0 mx-auto'>
+        <form className='h-full w-full flex-grow p-2'>
+          {formContent(activeStep)}
+        </form>
+      </section>
+      <section className='flex justify-between w-full mt-2  max-w-5xl my-0 mx-auto'>
         <button
           className='bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
           disabled={activeStep === 0}
@@ -188,8 +186,8 @@ const Form = () => {
               Siguiente
             </button>
             )}
-      </div>
-    </section>
+      </section>
+    </main>
   )
 }
 

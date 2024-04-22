@@ -2,7 +2,7 @@ import React from 'react'
 
 const Reporter = ({ formik }) => {
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 gap-8 pl-2'>
+    <section className='grid grid-cols-1 md:grid-cols-2 gap-8 pl-2'>
       <div className='col-span-1'>
         <label className='block text-white text-sm pb-2'>Email</label>
         <input
@@ -137,7 +137,7 @@ const Reporter = ({ formik }) => {
           value={formik.values.reporter.ciudad || ''}
         />
       </div>
-    </div>
+    </section>
   )
 }
 

@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng
 } from 'use-places-autocomplete'
-import SearchInput from '../SearchInput'
-import Suggestions from '../Suggestions'
+import SearchInput from './SearchInput'
+import Suggestions from './Suggestions'
+import { LocationProvider, useLocation } from '@/app/context/LocationContext'
 
-export default function Geolocation ({ setSelectedLocation, formik }) {
+const LocationSearch = ({ onLocationSelect }) => {
+  const { locationSaved, selectedLocation } = useLocation(LocationProvider) // Acceder al contexto
+  const [searchValue, setSearchValue] = useState(selectedLocation.direccion || '')
+
   const {
     value,
     setValue,
@@ -22,6 +26,10 @@ export default function Geolocation ({ setSelectedLocation, formik }) {
 
   const [showSuggestions, setShowSuggestions] = useState(false)
 
+  useEffect(() => {
+    setSearchValue(selectedLocation.direccion || '')
+  }, [selectedLocation.direccion])
+
   const handleSelect = async (address) => {
     setValue(address, false)
     clearSuggestions()
@@ -32,9 +40,8 @@ export default function Geolocation ({ setSelectedLocation, formik }) {
       if (results && results.length > 0) {
         const { lat, lng } = await getLatLng(results[0])
         const location = { direccion: address, latitud: lat, longitud: lng }
-
-        setSelectedLocation(location)
-        formik.setFieldValue('location', location)
+        locationSaved(location) // Actualizar contexto
+        onLocationSelect(location)
         console.log('selected Location:', location)
       } else {
         console.error('No se encontraron resultados para la dirección proporcionada:', address)
@@ -45,11 +52,13 @@ export default function Geolocation ({ setSelectedLocation, formik }) {
   }
 
   const handleInputChange = (event) => {
+    setSearchValue(event.target.value)
     setValue(event.target.value)
     setShowSuggestions(true)
   }
 
   const handleSuggestionClick = (address) => {
+    setSearchValue(address)
     setValue(address, false)
     setShowSuggestions(false)
     handleSelect(address)
@@ -57,10 +66,12 @@ export default function Geolocation ({ setSelectedLocation, formik }) {
 
   return (
     <>
-      <SearchInput value={value} onChange={handleInputChange} />
+      <SearchInput value={value || searchValue} onChange={handleInputChange} />
       {showSuggestions && status === 'OK' && data && (
         <Suggestions suggestions={data} handleSuggestionClick={handleSuggestionClick} />
       )}
     </>
   )
 }
+
+export default LocationSearch

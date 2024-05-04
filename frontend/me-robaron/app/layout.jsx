@@ -1,6 +1,7 @@
 import { Poppins } from 'next/font/google'
 import './globals.css'
 import Script from 'next/script'
+import { LocationProvider } from './context/LocationContext'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -14,14 +15,16 @@ export const metadata = {
 
 export default function RootLayout ({ children }) {
   return (
-    <html lang='es'>
-      <body className={poppins.className}>
-        {children}
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-          strategy='beforeInteractive'
-        />
-      </body>
-    </html>
+    <LocationProvider>
+      <html lang='es'>
+        <body className={poppins.className}>
+          {children}
+          <Script
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+            strategy='beforeInteractive'
+          />
+        </body>
+      </html>
+    </LocationProvider>
   )
 }

@@ -7,7 +7,6 @@ import Reporter from './reporterForm/ReporterForm'
 import PeopleInvolved from './peopleInvolved/PeopleInvolved'
 import Report from './reportForm/ReportForm'
 import { fetchLocations, saveFormData } from '../services/apiServices'
-
 const steps = [
   'Denunciante',
   'Personas involucradas',
@@ -23,10 +22,6 @@ const Form = () => {
     latitud: 0,
     longitud: 0
   })
-  const [showDenunciadoForm, setShowDenunciadoForm] = useState(false)
-  const [showVictimModal, setShowVictimModal] = useState(false)
-  const [showWitnessModal, setShowWitnessModal] = useState(false)
-
   useEffect(() => {
     const fetchLocationsData = async () => {
       try {
@@ -46,6 +41,10 @@ const Form = () => {
 
   const handleBack = () => {
     setActiveStep((prevStep) => prevStep - 1)
+  }
+
+  const handleNext = async () => {
+    setActiveStep((prevStep) => prevStep + 1)
   }
 
   const formik = useFormik({
@@ -108,12 +107,6 @@ const Form = () => {
         return (
           <PeopleInvolved
             formik={formik}
-            showDenunciadoForm={showDenunciadoForm}
-            setShowDenunciadoForm={setShowDenunciadoForm}
-            showWitnessModal={showWitnessModal}
-            setShowWitnessModal={setShowWitnessModal}
-            showVictimModal={showVictimModal}
-            setShowVictimModal={setShowVictimModal}
           />
         )
       case 2:
@@ -132,9 +125,9 @@ const Form = () => {
   }
 
   return (
-    <main className='bg-dark h-full flex flex-col justify-center items-center p-5'>
-      <section className='flex md:flex-row w-full md:h-4/5 justify-center items-center flex-col h-full  max-w-5xl my-0 mx-auto'>
-        <div className='md:w-56 h-20 w-full md:h-full border-r-2 border-r-medium'>
+    <main className='bg-dark flex flex-col justify-center items-center p-5 h-full'>
+      <section className='flex md:flex-row w-full h-full justify-center items-center flex-col max-w-5xl my-0 mx-auto'>
+        <div className='md:w-56  w-full h-full border-r-2 border-r-medium'>
           <ul className='w-full flex md:flex-col space-y-4'>
             {steps.map((label, index) => (
               <li
@@ -161,7 +154,7 @@ const Form = () => {
           {formContent(activeStep)}
         </form>
       </section>
-      <section className='flex justify-between w-full mt-2  max-w-5xl my-0 mx-auto'>
+      <section className='flex justify-between w-full mt-2 max-w-5xl my-0 mx-auto'>
         <button
           className='bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
           disabled={activeStep === 0}
@@ -181,7 +174,7 @@ const Form = () => {
           : (
             <button
               className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-              onClick={() => setActiveStep((prevStep) => prevStep + 1)}
+              onClick={handleNext}
             >
               Siguiente
             </button>

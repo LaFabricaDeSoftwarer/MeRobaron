@@ -1,97 +1,72 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PersonForm from '../personForm/personForm'
+import FormCheckbox from '@/app/components/FormCheckbox'
+import FormTextarea from '@/app/components/FormTextarea'
 
-const PeopleInvolved = ({ formik, showDenunciadoForm, setShowDenunciadoForm, showWitnessModal, setShowWitnessModal, showVictimModal, setShowVictimModal }) => {
+const PeopleInvolved = ({ formik }) => {
+  const [showDenunciadoForm, setShowDenunciadoForm] = useState(false)
+  const [showVictimForm, setShowVictimForm] = useState(false)
+
   const handleCheckboxChange = (event) => {
-    formik.handleChange(event)
+    formik.setFieldValue('showDenunciadoForm', event.target.checked)
     setShowDenunciadoForm(event.target.checked)
   }
 
+  const handleOpenVictimForm = () => {
+    setShowVictimForm(true)
+    console.log('showVictimForm', showVictimForm)
+  }
+
   return (
-    <section className='grid grid-cols-1 gap-4 pl-2'>
-      <div className='flex gap-2 '>
-        <label className='block text-white text-sm pb-2'>Conozco al denunciado</label>
-        <input
-          type='checkbox'
-          className='form-checkbox h-5 w-5 text-white rounded-md bg-medium appearance-none cursor-pointer'
-          checked={showDenunciadoForm}
+    <>
+      <h1 className='text-white text-xl text-center pb-2'>
+        Personas involucradas
+      </h1>
+      <section className='grid grid-cols-1 gap-4 pl-2 md:pt-5'>
+        <FormCheckbox
+          label='Conozco al denunciado'
+          name='report.conozcoAlDenunciado'
           onChange={handleCheckboxChange}
+          value={formik.values.report.conozcoAlDenunciado}
         />
-      </div>
-      {showDenunciadoForm && (
-        <>
-          <div className='col-span-2'>
-            <PersonForm />
-          </div>
-          <div className='col-span-1'>
-            <label className='block text-white text-sm pb-2'>Vestimenta</label>
-            <input
-              className='w-full px-3 py-2 text-white leading-tight focus:outline-none focus:shadow-outline rounded-md bg-medium appearance-none'
-              type='text'
+        {showDenunciadoForm && (
+          <>
+            <div className='col-span-2'>
+              <PersonForm />
+            </div>
+            <FormTextarea
+              label='Vestimenta'
               name='reported.vestimenta'
               placeholder='Vestimenta'
               onChange={formik.handleChange}
               value={formik.values.reported.vestimenta || ''}
             />
-          </div>
-          <div className='col-span-1'>
-            <label className='block text-white text-sm pb-2'>Apariencia</label>
-            <input
-              className='w-full px-3 py-2 text-white leading-tight focus:outline-none focus:shadow-outline rounded-md bg-medium appearance-none'
-              type='text'
+            <FormTextarea
+              label='Apariencia'
               name='reported.apariencia'
               placeholder='Apariencia'
               onChange={formik.handleChange}
               value={formik.values.reported.apariencia || ''}
             />
-          </div>
-        </>
-      )}
-      <div className='col-span-2'>
-        <button
-          className='bg-blue-500 hover:bg-blue-700 text-white rounded bg-medium p-2 text-sm mr-4'
-          onClick={() => setShowVictimModal(true)}
-        >
-          Agregar Víctima
-        </button>
-        <button
-          className='bg-blue-500 hover:bg-blue-700 text-white rounded bg-medium p-2 text-sm'
-          onClick={() => setShowWitnessModal(true)}
-        >
-          Agregar Testigo
-        </button>
-      </div>
-
-      {showVictimModal && (
-        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-dark border-solid border-medium border-2 rounded-md p-4 w-1/4'>
-            <div className='mt-2'>
-              <PersonForm />
-            </div>
+          </>
+        )}
+        <div className='flex'>
+          <div className='col-span-2'>
             <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2'
-              onClick={() => setShowVictimModal(false)}
+              className='bg-blue-500 hover:bg-blue-700 text-white rounded bg-medium p-2 text-sm mr-4'
+              onClick={handleOpenVictimForm}
             >
-              Cerrar
+              Agregar Víctima
             </button>
+            {showVictimForm && (
+              <div className='col-span-2'>
+                <PersonForm />
+              </div>
+            )}
           </div>
         </div>
-      )}
-
-      {showWitnessModal && (
-        <div className='fixed inset-0 flex items-center justify-center bg-dark bg-opacity-50'>
-          <div className='bg-dark border-solid border-medium border-2 rounded-md p-4 w-1/4'>
-            <PersonForm />
-            <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2'
-              onClick={() => setShowWitnessModal(false)}
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
-    </section>
+      </section>
+    </>
   )
 }
 

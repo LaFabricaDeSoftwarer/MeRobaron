@@ -3,29 +3,25 @@ export class Location {
     this.direccion = direccion
     this.latitud = latitud
     this.longitud = longitud
+    if (!this.direccion || !this.latitud || !this.longitud) {
+      throw new Error('Faltan datos requeridos para la direccion')
+    }
   }
 
-  save (db) {
-    return new Promise((resolve, reject) => {
-      const insertLocationSql = `
-        INSERT INTO Direccion (
-          Direccion,
-          Latitud,
-          Longitud
-        ) VALUES (?, ?, ?)`
-
-      db.query(
-        insertLocationSql,
-        [this.direccion, this.latitud, this.longitud],
-        (err, result) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve({ id: result.insertId })
-          }
-        }
-      )
-    })
+  async save (db) {
+    const insertLocationSql = `
+      INSERT INTO Direccion (
+        Direccion,
+        Latitud,
+        Longitud
+      ) VALUES (?, ?, ?)
+    `
+    try {
+      const [result] = await db.query(insertLocationSql, [this.direccion, this.latitud, this.longitud])
+      return { id: result.insertId }
+    } catch (error) {
+      throw new Error('Error al guardar los datos: ' + error.message)
+    }
   }
 
   static getAll (db) {
@@ -41,3 +37,5 @@ export class Location {
     })
   }
 }
+
+export default Location

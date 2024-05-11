@@ -4,21 +4,20 @@ export class Victim {
     this.reportID = reportID
   }
 
-  save (db) {
-    return new Promise((resolve, reject) => {
-      const insertVictimSql = `
-        INSERT INTO Victima (
-            PersonaID, 
-            DenunciaID
-        ) VALUES (?, ?)`
-
-      db.query(insertVictimSql, [this.personID, this.reportID], (err, result) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve({ id: result.insertId })
-        }
-      })
-    })
+  async save (db) {
+    const insertVictimSql = `
+      INSERT INTO Victima (
+        PersonaID, 
+        DenunciaID
+      ) VALUES (?, ?)
+    `
+    try {
+      const [result] = await db.query(insertVictimSql, [this.personID, this.reportID])
+      return { id: result.insertId }
+    } catch (error) {
+      throw new Error('Error al guardar los datos: ' + error.message)
+    }
   }
 }
+
+export default Victim

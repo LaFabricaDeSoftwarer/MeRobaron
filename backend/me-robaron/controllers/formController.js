@@ -35,18 +35,6 @@ async function saveLocation (locationData, db) {
   )
   return await locationObj.save(db)
 }
-
-async function saveReport (reportData, reporterID, locationID, db) {
-  const reportObj = new Report(
-    reporterID,
-    reportData.fecha,
-    locationID,
-    reportData.detalle,
-    reportData.conozcoAlDenunciado
-  )
-  return await reportObj.save(db)
-}
-
 async function savePerson (personData, db) {
   const personObj = new Person(
     personData.apellido,
@@ -59,6 +47,20 @@ async function savePerson (personData, db) {
   return await personObj.save(db)
 }
 
+async function saveReport (reportData, reporterID, locationID, db) {
+  const reportObj = new Report(
+    reporterID,
+    reportData.fecha,
+    locationID,
+    reportData.detalle,
+    reportData.conozcoAlDenunciado,
+    reportData.hayVictimas,
+    reportData.hayTestigos
+
+  )
+  return await reportObj.save(db)
+}
+
 async function saveReported (personID, reportID, reportedData, db) {
   const reportedObj = new Reported(
     personID,
@@ -69,7 +71,7 @@ async function saveReported (personID, reportID, reportedData, db) {
   return await reportedObj.save(db)
 }
 
-async function saveVictim (personID, reportID, victimData, db) {
+async function saveVictim (personID, reportID, db) {
   const victimObj = new Victim(
     personID,
     reportID
@@ -77,7 +79,7 @@ async function saveVictim (personID, reportID, victimData, db) {
   return await victimObj.save(db)
 }
 
-async function saveWitness (personID, reportID, witnessData, db) {
+async function saveWitness (personID, reportID, db) {
   const witnessObj = new Witness(
     personID,
     reportID
@@ -86,33 +88,47 @@ async function saveWitness (personID, reportID, witnessData, db) {
 }
 
 export async function saveFormData (req, res) {
+  const { reporter, location, person, report, reported } = req.body
+
+  if (!reporter || !location || !person || !report) {
+    console.log('Faltan datos en el formulario:', {
+      reporter,
+      location,
+      person,
+      report,
+      reported
+    })
+    throw new Error('Falta información requerida en el formulario')
+  } else {
+    console.log('req.body', req.body)
+  }
+
   try {
-    const { reporter, location, person, report, reported, victim, witness } = req.body
+    const connection = await db.getConnection()
 
-    if (!reporter || !location || !person || !report || !reported || !victim || !witness) {
-      return res.status(400).json({ error: 'Falta información requerida en el formulario.' })
-    }
+    const reporterResult = await saveReporter(reporter, connection)
+    const locationResult = await saveLocation(location, connection)
+    const personResult = await savePerson(person, connection)
+    const reportResult = await saveReport(report, reporterResult.id, locationResult.id, connection)
+    const reportedResult = await saveReported(personResult.id, reportResult.id, reported, connection)
+    const victimResult = await saveVictim(personResult.id, reportResult.id, connection)
+    const witnessResult = await saveWitness(personResult.id, reportResult.id, connection)
 
-    const reporterResult = await saveReporter(reporter, db)
-    const locationResult = await saveLocation(location, db)
-    const personResult = await savePerson(person, db)
-    const reportResult = await saveReport(report, reporterResult.id, locationResult.id, db)
-    const reportedResult = await saveReported(personResult.id, reportResult.id, reported, db)
-    const victimResult = await saveVictim(personResult.id, reportResult.id, victim, db)
-    const witnessResult = await saveWitness(personResult.id, reportResult.id, witness, db)
-
-    res.status(201).json({
+    // Crear objeto de datos
+    const formData = {
       reporter: reporterResult,
       location: locationResult,
       person: personResult,
       report: reportResult,
       reported: reportedResult,
-      victim: victimResult,
-      witness: witnessResult
+      victims: victimResult || [],
+      witness: witnessResult || []
+    }
 
-    })
+    res.status(201).json(formData)
+    connection.release()
   } catch (error) {
-    console.error('Error al guardar en la base de datos:', error)
-    res.status(500).json({ error: 'Hubo un error al procesar la solicitud' })
+    console.error('Error al guardar los datos:', error)
+    res.status(500).json({ error: 'Error al guardar los datos' })
   }
 }

@@ -28,26 +28,24 @@ export class Reporter {
     this.ciudad = ciudad
   }
 
-  save (db) {
-    return new Promise((resolve, reject) => {
-      const insertReporterSql = `
-        INSERT INTO Denunciante (
-          Email,
-          AceptaCondicion,
-          Apellido,
-          Nombre,
-          TipoDocumento,
-          NroDocumento,
-          Edad,
-          Telefono,
-          Calle,
-          Numero,
-          Barrio,
-          Ciudad         
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `
-
-      db.query(insertReporterSql, [
+  async save (db) {
+    const insertReporterSql = `
+      INSERT INTO Denunciante (
+        Email,
+        AceptaCondicion,
+        Apellido,
+        Nombre,
+        TipoDocumento,
+        NroDocumento,
+        Edad,
+        Telefono,
+        Calle,
+        Numero,
+        Barrio,
+        Ciudad         
+      ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    try {
+      const [result] = await db.query(insertReporterSql, [
         this.email,
         this.aceptoCondicion,
         this.apellido,
@@ -59,13 +57,12 @@ export class Reporter {
         this.calle,
         this.numero,
         this.barrio,
-        this.ciudad], (err, result) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve({ id: result.insertId })
-        }
-      })
-    })
+        this.ciudad
+      ])
+      return { id: result.insertId }
+    } catch (error) {
+      throw new Error('Error al guardar los datos: ' + error.message)
+    }
   }
 }
+export default Reporter

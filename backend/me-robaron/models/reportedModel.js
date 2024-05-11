@@ -1,35 +1,32 @@
 export class Reported {
-  constructor (
-    personID,
-    reportID,
-    vestimenta,
-    apariencia
-  ) {
+  constructor (personID, reportID, vestimenta, apariencia) {
     this.personID = personID
     this.reportID = reportID
     this.vestimenta = vestimenta
     this.apariencia = apariencia
   }
 
-  save (db) {
-    return new Promise((resolve, reject) => {
-      const insertReportedSql = `
-            INSERT INTO Denunciado (
-                PersonaID, 
-                DenunciaID,
-                Vestimenta,
-                AparienciaFisica
-            ) VALUES (?, ?, ?, ?)
-        `
-      db.query(insertReportedSql, [
-        this.personID, this.reportID, this.vestimenta, this.apariencia
-      ], (err, result) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve({ id: result.insertId })
-        }
-      })
-    })
+  async save (db) {
+    const insertReportedSql = `
+      INSERT INTO Denunciado (
+        PersonaID, 
+        DenunciaID,
+        Vestimenta,
+        Apariencia
+      ) VALUES (?, ?, ?, ?)
+    `
+    try {
+      const [result] = await db.query(insertReportedSql, [
+        this.personID,
+        this.reportID,
+        this.vestimenta,
+        this.apariencia
+      ])
+      return { id: result.insertId }
+    } catch (error) {
+      throw new Error('Error al guardar los datos: ' + error.message)
+    }
   }
 }
+
+export default Reported

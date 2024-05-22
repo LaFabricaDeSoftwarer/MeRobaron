@@ -5,7 +5,7 @@ import usePlacesAutocomplete, {
 } from 'use-places-autocomplete'
 import SearchInput from './SearchInput'
 import Suggestions from './Suggestions'
-import { LocationProvider, useLocation } from '@/app/context/LocationContext'
+import { LocationProvider, useLocation } from '../context/LocationContext'
 
 const LocationSearch = ({ onLocationSelect }) => {
   const { locationSaved, selectedLocation } = useLocation(LocationProvider) // Acceder al contexto

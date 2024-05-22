@@ -6,9 +6,9 @@ import { Reporter } from '../models/reporterModel.js'
 import { Reported } from '../models/reportedModel.js'
 import { Victim } from '../models/victimModel.js'
 import { Witness } from '../models/witnessModel.js'
-import db from '../dbconfig.js'
+import connectionPool from '../dbconfig.js'
 
-async function saveReporter (reporterData, db) {
+async function saveReporter (reporterData, connectionPool) {
   const reporterObj = new Reporter(
     reporterData.email,
     reporterData.aceptoCondicion,
@@ -24,30 +24,18 @@ async function saveReporter (reporterData, db) {
     reporterData.ciudad
 
   )
-  return await reporterObj.save(db)
+  return await reporterObj.save(connectionPool)
 }
 
-async function saveLocation (locationData, db) {
+async function saveLocation (locationData, connectionPool) {
   const locationObj = new Location(
     locationData.direccion,
     locationData.latitud,
     locationData.longitud
   )
-  return await locationObj.save(db)
+  return await locationObj.save(connectionPool)
 }
-
-async function saveReport (reportData, reporterID, locationID, db) {
-  const reportObj = new Report(
-    reporterID,
-    reportData.fecha,
-    locationID,
-    reportData.detalle,
-    reportData.conozcoAlDenunciado
-  )
-  return await reportObj.save(db)
-}
-
-async function savePerson (personData, db) {
+async function savePerson (personData, connectionPool) {
   const personObj = new Person(
     personData.apellido,
     personData.nombre,
@@ -56,63 +44,100 @@ async function savePerson (personData, db) {
     personData.barrio,
     personData.ciudad
   )
-  return await personObj.save(db)
+  return await personObj.save(connectionPool)
 }
 
-async function saveReported (personID, reportID, reportedData, db) {
+async function saveReport (reportData, reporterID, locationID, connectionPool) {
+  const reportObj = new Report(
+    reporterID,
+    reportData.fecha,
+    locationID,
+    reportData.detalle,
+    reportData.conozcoAlDenunciado,
+    reportData.hayVictimas,
+    reportData.hayTestigos
+
+  )
+  return await reportObj.save(connectionPool)
+}
+
+async function saveReported (personID, reportID, reportedData, connectionPool) {
   const reportedObj = new Reported(
     personID,
     reportID,
     reportedData.vestimenta,
     reportedData.apariencia
   )
-  return await reportedObj.save(db)
+  return await reportedObj.save(connectionPool)
 }
 
-async function saveVictim (personID, reportID, victimData, db) {
+async function saveVictim (personID, reportID, connectionPool) {
   const victimObj = new Victim(
     personID,
     reportID
   )
-  return await victimObj.save(db)
+  return await victimObj.save(connectionPool)
 }
 
-async function saveWitness (personID, reportID, witnessData, db) {
+async function saveWitness (personID, reportID, connectionPool) {
   const witnessObj = new Witness(
     personID,
     reportID
   )
-  return await witnessObj.save(db)
+  return await witnessObj.save(connectionPool)
 }
 
 export async function saveFormData (req, res) {
+  const { reporter, location, report, reported, victim, witness } = req.body
+
+  if (!reporter || !location || !report) {
+    console.log('Faltan datos en el formulario:', { reporter, location, report, reported })
+    throw new Error('Falta información requerida en el formulario')
+  } else {
+    console.log('Datos en el formulario:', { reporter, location, report, reported, victim, witness })
+  }
+
   try {
-    const { reporter, location, person, report, reported, victim, witness } = req.body
+    const connection = await connectionPool.getConnection()
 
-    if (!reporter || !location || !person || !report || !reported || !victim || !witness) {
-      return res.status(400).json({ error: 'Falta información requerida en el formulario.' })
-    }
+    const reporterResult = await saveReporter(reporter, connection)
+    console.log('reporterResult', reporterResult)
+    const locationResult = await saveLocation(location, connection)
+    console.log('locationResult', locationResult)
+    const reportResult = await saveReport(report, reporterResult.id, locationResult.id, connection)
+    console.log('reportResult', reportResult)
+    const reportedPersonResult = await savePerson(reported, connection)
+    console.log('reportedPersonResult', reportedPersonResult)
+    const victimPersonResult = await savePerson(victim, connection)
+    console.log('victimPersonResult', victimPersonResult)
+    const witnessPersonResult = await savePerson(witness, connection)
+    console.log('witnessPersonResult', witnessPersonResult)
 
-    const reporterResult = await saveReporter(reporter, db)
-    const locationResult = await saveLocation(location, db)
-    const personResult = await savePerson(person, db)
-    const reportResult = await saveReport(report, reporterResult.id, locationResult.id, db)
-    const reportedResult = await saveReported(personResult.id, reportResult.id, reported, db)
-    const victimResult = await saveVictim(personResult.id, reportResult.id, victim, db)
-    const witnessResult = await saveWitness(personResult.id, reportResult.id, witness, db)
+    // datos de las personas relacionadas con el reporte
+    const reportedResult = await saveReported(reportedPersonResult.id, reportResult.id, reported, connection)
+    console.log('reportedResult', reportedResult)
+    const victimResult = await saveVictim(victimPersonResult.id, reportResult.id, connection)
+    console.log('victimResult', victimResult)
+    const witnessResult = await saveWitness(witnessPersonResult.id, reportResult.id, connection)
+    console.log('witnessResult', witnessResult)
 
-    res.status(201).json({
+    // objeto de datos
+    const formData = {
       reporter: reporterResult,
       location: locationResult,
-      person: personResult,
       report: reportResult,
-      reported: reportedResult,
-      victim: victimResult,
-      witness: witnessResult
+      reportedPerson: reportedPersonResult,
+      victimPerson: victimPersonResult,
+      witnessPerson: witnessPersonResult,
+      reported: reportedResult || [],
+      victims: victimResult || [],
+      witness: witnessResult || []
+    }
 
-    })
+    res.status(201).json(formData)
+    connection.release()
   } catch (error) {
-    console.error('Error al guardar en la base de datos:', error)
-    res.status(500).json({ error: 'Hubo un error al procesar la solicitud' })
+    console.error('Error al guardar los datos:', error)
+    res.status(500).json({ error: 'Error al guardar los datos' })
   }
 }

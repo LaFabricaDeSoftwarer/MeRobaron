@@ -104,7 +104,6 @@ const AutocompleteMap = () => {
 
         setSelectedLocation(location)
         setZoom(ZOOM_LOCALIDAD)
-        console.log('selected Location:', location)
       } else {
         console.error('No se encontraron resultados para la dirección proporcionada:', address)
       }
@@ -170,4 +169,4 @@ const AutocompleteMap = () => {
   )
 }
 
-export default Home
+export default AutocompleteMap

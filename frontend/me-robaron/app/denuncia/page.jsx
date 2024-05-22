@@ -3,10 +3,9 @@ import React, { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import ReviewInfo from './reviewInfo/ReviewInfo'
 import Reporter from './reporterForm/ReporterForm'
-// import Reported from '../reportedForm/ReportedForm'
 import PeopleInvolved from './peopleInvolved/PeopleInvolved'
 import Report from './reportForm/ReportForm'
-import { fetchLocations, saveFormData } from '../services/apiServices'
+import { saveFormData } from '../services/apiServices'
 const steps = [
   'Denunciante',
   'Personas involucradas',
@@ -16,24 +15,11 @@ const steps = [
 
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
-  const [locations, setLocations] = useState([])
   const [selectedLocation, setSelectedLocation] = useState({
     direccion: '',
     latitud: 0,
     longitud: 0
   })
-  useEffect(() => {
-    const fetchLocationsData = async () => {
-      try {
-        const getLocationsData = await fetchLocations()
-        setLocations(getLocationsData)
-      } catch (error) {
-        console.error('Error fetching locations:', error.message)
-      }
-    }
-
-    fetchLocationsData()
-  }, [])
 
   useEffect(() => {
     formik.setFieldValue('location', selectedLocation)
@@ -55,7 +41,7 @@ const Form = () => {
         apellido: '',
         nombre: '',
         tipoDocumento: '',
-        nroDocumento: 0,
+        nroDocumento: '',
         edad: 0,
         telefono: '',
         calle: '',
@@ -64,7 +50,24 @@ const Form = () => {
         ciudad: ''
       },
       location: selectedLocation,
-      person: {
+      report: {
+        fecha: '',
+        detalle: '',
+        conozcoAlDenunciado: false,
+        hayVictimas: false,
+        hayTestigos: false
+      },
+      reported: {
+        apellido: '',
+        nombre: '',
+        calle: '',
+        numero: '',
+        barrio: '',
+        ciudad: '',
+        vestimenta: '',
+        apariencia: ''
+      },
+      victim: {
         apellido: '',
         nombre: '',
         calle: '',
@@ -72,20 +75,13 @@ const Form = () => {
         barrio: '',
         ciudad: ''
       },
-      report: {
-        fecha: '',
-        detalle: '',
-        conozcoAlDenunciado: false
-      },
-      reported: {
-        vestimenta: '',
-        apariencia: ''
-      },
-      victim: {
-        // Detalles de la víctima
-      },
       witness: {
-        // Detalles del testigo
+        apellido: '',
+        nombre: '',
+        calle: '',
+        numero: '',
+        barrio: '',
+        ciudad: ''
       }
     },
     onSubmit: async (values) => {
@@ -118,43 +114,36 @@ const Form = () => {
           />
         )
       case 3:
-        return <ReviewInfo formik={formik} locations={locations} />
+        return <ReviewInfo formik={formik} />
       default:
         return <div>404: Not Found</div>
     }
   }
 
   return (
-    <main className='bg-dark flex flex-col justify-center items-center p-5 h-full'>
-      <section className='flex md:flex-row w-full h-full justify-center items-center flex-col max-w-5xl my-0 mx-auto'>
-        <div className='md:w-56  w-full h-full border-r-2 border-r-medium'>
-          <ul className='w-full flex md:flex-col space-y-4'>
+    <main className='flex flex-col justify-between h-screen p-8 gap-10'>
+      <section className='flex md:flex-row flex-col w-full h-screen'>
+        <div className='md:border-r-2 md:border-r-medium md:w-1/5 flex'>
+          <ul className='md:w-56 flex md:flex-col w-full justify-evenly '>
             {steps.map((label, index) => (
-              <li
-                key={index}
-                className={`flex items-center rounded-t-md px-4 py-2 font-medium ${
-                  index === activeStep
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-200'
-                }`}
-              >
+              <li key={index}>
                 <span
-                  className={`rounded-full px-2 text-sm text-white bg-${
+                  className={`rounded-full px-2 py-1 text-sm text-white font-light bg-${
                     index === activeStep ? 'green' : 'trasnsparent'
                   }`}
                 >
                   {index + 1}
                 </span>
-                <span className='px-2 text-sm text-white'>{label}</span>
+                <span className='md:px-2 md:text-sm md:text-white md:font-light md:visible invisible'>{label}</span>
               </li>
             ))}
           </ul>
         </div>
-        <form className='h-full w-full flex-grow p-2'>
+        <form className='md:w-4/5 pl-5 flex flex-col justify-center gap-10'>
           {formContent(activeStep)}
         </form>
       </section>
-      <section className='flex justify-between w-full mt-2 max-w-5xl my-0 mx-auto'>
+      <section className='flex justify-between w-full'>
         <button
           className='bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
           disabled={activeStep === 0}

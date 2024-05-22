@@ -4,25 +4,23 @@ export class Witness {
     this.reportID = reportID
   }
 
-  save (db) {
-    return new Promise((resolve, reject) => {
-      const insertWitnessSql = `
-        INSERT INTO Testigo (
-            PersonaID, 
-            DenunciaID
-        ) VALUES (?, ?)`
-
-      db.query(
-        insertWitnessSql,
-        [this.personID, this.reportID],
-        (err, result) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve({ id: result.insertId })
-          }
-        }
-      )
-    })
+  async save (connectionPool) {
+    const insertWitnessSql = `
+      INSERT INTO Testigo (
+        PersonaID, 
+        DenunciaID
+      ) VALUES (?, ?)
+    `
+    try {
+      const [result] = await connectionPool.query(insertWitnessSql, [
+        this.personID,
+        this.reportID
+      ])
+      return { id: result.insertId }
+    } catch (error) {
+      throw new Error('Error al guardar los datos: ' + error.message)
+    }
   }
 }
+
+export default Witness

@@ -1,6 +1,5 @@
 import { saveFormData } from '../controllers/formController.js'
-import { getAllLocations } from '../controllers/locationsController.js'
-import { saveFormDataLocation } from '../controllers/formLocation.js'
+import { saveFormDataLocation, getAllLocations } from '../controllers/formLocationController.js'
 import express from 'express'
 
 const router = express.Router()

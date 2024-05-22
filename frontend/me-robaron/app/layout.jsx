@@ -1,11 +1,11 @@
-import { Poppins } from 'next/font/google'
+import { Roboto } from 'next/font/google'
 import './globals.css'
 import Script from 'next/script'
 import { LocationProvider } from './context/LocationContext'
 
-const poppins = Poppins({
+const roboto = Roboto({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700']
+  weight: ['300', '400', '500', '700']
 })
 
 export const metadata = {
@@ -17,7 +17,7 @@ export default function RootLayout ({ children }) {
   return (
     <LocationProvider>
       <html lang='es'>
-        <body className={poppins.className}>
+        <body className={roboto.className}>
           {children}
           <Script
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}

@@ -72,7 +72,7 @@ const Home = () => {
   return (
     <main className='flex flex-col md:flex-row justify-center items-center w-full h-full'>
       <section className='bg-dark md:w-1/2 w-full md:h-full h-2/4 flex flex-col items-center md:justify-center justify-start md:gap-10 gap-2 py-8'>
-        <h1 className='md:text-5xl text-3xl text-white text-center px-6'>¿Dónde te robaron?</h1>
+        <h1 className='md:text-5xl text-3xl text-white text-center px-6 font-light'>¿Dónde te robaron?</h1>
         <div className='flex justify-center items-center gap-2 md:w-96 w-72 px-6'>
           <div className='w-full relative'>
             <LocationSearch onLocationSelect={handleLocationSelect} />
@@ -89,11 +89,13 @@ const Home = () => {
           center={selectedLocation.latitud !== 0 ? { lat: selectedLocation.latitud, lng: selectedLocation.longitud } : center} options={{
             disableDefaultUI: true
           }}
+
         >
           {locations.map((location) => (
             <Marker key={location.DireccionID} position={{ lat: parseFloat(location.Latitud), lng: parseFloat(location.Longitud) }} />
           ))}
           {selectedLocation && <Marker position={{ lat: selectedLocation.latitud, lng: selectedLocation.longitud }} />}
+
         </Map>
       </section>
       {showModal && (

@@ -24,17 +24,15 @@ export class Location {
     }
   }
 
-  static getAll (db) {
-    return new Promise((resolve, reject) => {
+  static async getAll (db) {
+    try {
       const selectAllSql = 'SELECT * FROM Direccion'
-      db.query(selectAllSql, (err, results) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(results)
-        }
-      })
-    })
+      const [results] = await db.query(selectAllSql)
+      console.log('results', results)
+      return results
+    } catch (error) {
+      throw new Error('Error al obtener las direcciones: ' + error.message)
+    }
   }
 }
 

@@ -5,24 +5,26 @@ import Checkbox from '@/app/components/FormCheckbox'
 
 const Reporter = ({ formik }) => {
   const { values, handleChange } = formik
+  const reporter = values.reporter
 
   return (
     <>
-      <h1 className='text-white text-xl text-center pb-2'>Datos del denunciante</h1>
-      <section className='grid grid-cols-1 md:grid-cols-2 gap-8 pl-2 justify-center items-center md:pt-5'>
+      <h1 className='text-white text-xl text-center '>Datos del denunciante</h1>
+      <section className='grid grid-cols-1 md:grid-cols-2 gap-8 justify-center items-center '>
         <Checkbox
           label='Acepto la condición'
-          name='aceptoCondicion'
-          onChange={formik.handleChange}
-          value={formik.values.aceptoCondicion}
+          name='reporter.aceptoCondicion'
+          value={reporter.aceptoCondicion}
+          onChange={handleChange}
         />
         {reporterAtributtes.map((attribute, index) => (
           <div key={index}>
             <FormInput
               {...attribute}
+              key={index}
+              name={`reporter.${attribute.name}`}
+              value={reporter[attribute.name] || ''}
               onChange={handleChange}
-              value={values[attribute.name] || ''}
-              name={attribute.name}
             />
           </div>
         ))}

@@ -7,7 +7,7 @@ export default function SearchInput ({ value, onChange }) {
       type='text'
       value={value}
       onChange={onChange}
-      className='md:p-2 w-full px-3 py-2 text-white leading-tight focus:outline-none focus:shadow-outline  bg-medium appearance-none'
+      className='w-full px-3 py-1.5 text-white focus:outline-none focus:shadow-outline  bg-medium appearance-none text-sm'
       placeholder='Buscar dirección'
     />
   )

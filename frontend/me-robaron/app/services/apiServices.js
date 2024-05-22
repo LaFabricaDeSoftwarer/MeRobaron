@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseURL = 'http://localhost:3001'
+const baseURL = 'http://localhost:3002'
 
 export async function saveFormData (formData) {
   try {
@@ -25,7 +25,7 @@ export async function saveLocation (locationData) {
 
 export const fetchLocations = async () => {
   try {
-    const response = await axios.get('http://localhost:3001/direcciones')
+    const response = await axios.get(`${baseURL}/direcciones`)
     if (response.status === 200) {
       const data = response.data
       console.log('Datos de ubicaciones obtenidos correctamente:', data)

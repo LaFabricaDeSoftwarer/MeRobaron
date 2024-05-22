@@ -28,7 +28,7 @@ export class Reporter {
     this.ciudad = ciudad
   }
 
-  async save (db) {
+  async save (connectionPool) {
     const insertReporterSql = `
       INSERT INTO Denunciante (
         Email,
@@ -45,7 +45,7 @@ export class Reporter {
         Ciudad         
       ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     try {
-      const [result] = await db.query(insertReporterSql, [
+      const [result] = await connectionPool.query(insertReporterSql, [
         this.email,
         this.aceptoCondicion,
         this.apellido,

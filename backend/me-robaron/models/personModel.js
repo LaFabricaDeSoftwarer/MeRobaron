@@ -8,7 +8,7 @@ export class Person {
     this.ciudad = ciudad
   }
 
-  async save (db) {
+  async save (connectionPool) {
     const insertPersonSql = `
         INSERT INTO Persona (
           Apellido,
@@ -20,7 +20,7 @@ export class Person {
         ) VALUES (?, ?, ?, ?, ?, ?)
       `
     try {
-      const [result] = await db.query(insertPersonSql, [
+      const [result] = await connectionPool.query(insertPersonSql, [
         this.apellido,
         this.nombre,
         this.calle,

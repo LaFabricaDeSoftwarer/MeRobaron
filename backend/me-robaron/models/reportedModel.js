@@ -6,7 +6,7 @@ export class Reported {
     this.apariencia = apariencia
   }
 
-  async save (db) {
+  async save (connectionPool) {
     const insertReportedSql = `
       INSERT INTO Denunciado (
         PersonaID, 
@@ -16,7 +16,7 @@ export class Reported {
       ) VALUES (?, ?, ?, ?)
     `
     try {
-      const [result] = await db.query(insertReportedSql, [
+      const [result] = await connectionPool.query(insertReportedSql, [
         this.personID,
         this.reportID,
         this.vestimenta,

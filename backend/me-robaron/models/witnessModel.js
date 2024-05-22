@@ -4,7 +4,7 @@ export class Witness {
     this.reportID = reportID
   }
 
-  async save (db) {
+  async save (connectionPool) {
     const insertWitnessSql = `
       INSERT INTO Testigo (
         PersonaID, 
@@ -12,7 +12,7 @@ export class Witness {
       ) VALUES (?, ?)
     `
     try {
-      const [result] = await db.query(insertWitnessSql, [
+      const [result] = await connectionPool.query(insertWitnessSql, [
         this.personID,
         this.reportID
       ])

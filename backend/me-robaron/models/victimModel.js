@@ -4,7 +4,7 @@ export class Victim {
     this.reportID = reportID
   }
 
-  async save (db) {
+  async save (connectionPool) {
     const insertVictimSql = `
       INSERT INTO Victima (
         PersonaID, 
@@ -12,7 +12,10 @@ export class Victim {
       ) VALUES (?, ?)
     `
     try {
-      const [result] = await db.query(insertVictimSql, [this.personID, this.reportID])
+      const [result] = await connectionPool.query(insertVictimSql, [
+        this.personID,
+        this.reportID
+      ])
       return { id: result.insertId }
     } catch (error) {
       throw new Error('Error al guardar los datos: ' + error.message)

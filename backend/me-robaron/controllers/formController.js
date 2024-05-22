@@ -6,9 +6,9 @@ import { Reporter } from '../models/reporterModel.js'
 import { Reported } from '../models/reportedModel.js'
 import { Victim } from '../models/victimModel.js'
 import { Witness } from '../models/witnessModel.js'
-import db from '../dbconfig.js'
+import connectionPool from '../dbconfig.js'
 
-async function saveReporter (reporterData, db) {
+async function saveReporter (reporterData, connectionPool) {
   const reporterObj = new Reporter(
     reporterData.email,
     reporterData.aceptoCondicion,
@@ -24,18 +24,18 @@ async function saveReporter (reporterData, db) {
     reporterData.ciudad
 
   )
-  return await reporterObj.save(db)
+  return await reporterObj.save(connectionPool)
 }
 
-async function saveLocation (locationData, db) {
+async function saveLocation (locationData, connectionPool) {
   const locationObj = new Location(
     locationData.direccion,
     locationData.latitud,
     locationData.longitud
   )
-  return await locationObj.save(db)
+  return await locationObj.save(connectionPool)
 }
-async function savePerson (personData, db) {
+async function savePerson (personData, connectionPool) {
   const personObj = new Person(
     personData.apellido,
     personData.nombre,
@@ -44,10 +44,10 @@ async function savePerson (personData, db) {
     personData.barrio,
     personData.ciudad
   )
-  return await personObj.save(db)
+  return await personObj.save(connectionPool)
 }
 
-async function saveReport (reportData, reporterID, locationID, db) {
+async function saveReport (reportData, reporterID, locationID, connectionPool) {
   const reportObj = new Report(
     reporterID,
     reportData.fecha,
@@ -58,69 +58,78 @@ async function saveReport (reportData, reporterID, locationID, db) {
     reportData.hayTestigos
 
   )
-  return await reportObj.save(db)
+  return await reportObj.save(connectionPool)
 }
 
-async function saveReported (personID, reportID, reportedData, db) {
+async function saveReported (personID, reportID, reportedData, connectionPool) {
   const reportedObj = new Reported(
     personID,
     reportID,
     reportedData.vestimenta,
     reportedData.apariencia
   )
-  return await reportedObj.save(db)
+  return await reportedObj.save(connectionPool)
 }
 
-async function saveVictim (personID, reportID, db) {
+async function saveVictim (personID, reportID, connectionPool) {
   const victimObj = new Victim(
     personID,
     reportID
   )
-  return await victimObj.save(db)
+  return await victimObj.save(connectionPool)
 }
 
-async function saveWitness (personID, reportID, db) {
+async function saveWitness (personID, reportID, connectionPool) {
   const witnessObj = new Witness(
     personID,
     reportID
   )
-  return await witnessObj.save(db)
+  return await witnessObj.save(connectionPool)
 }
 
 export async function saveFormData (req, res) {
-  const { reporter, location, person, report, reported } = req.body
+  const { reporter, location, report, reported, victim, witness } = req.body
 
-  if (!reporter || !location || !person || !report) {
-    console.log('Faltan datos en el formulario:', {
-      reporter,
-      location,
-      person,
-      report,
-      reported
-    })
+  if (!reporter || !location || !report) {
+    console.log('Faltan datos en el formulario:', { reporter, location, report, reported })
     throw new Error('Falta información requerida en el formulario')
   } else {
-    console.log('req.body', req.body)
+    console.log('Datos en el formulario:', { reporter, location, report, reported, victim, witness })
   }
 
   try {
-    const connection = await db.getConnection()
+    const connection = await connectionPool.getConnection()
 
     const reporterResult = await saveReporter(reporter, connection)
+    console.log('reporterResult', reporterResult)
     const locationResult = await saveLocation(location, connection)
-    const personResult = await savePerson(person, connection)
+    console.log('locationResult', locationResult)
     const reportResult = await saveReport(report, reporterResult.id, locationResult.id, connection)
-    const reportedResult = await saveReported(personResult.id, reportResult.id, reported, connection)
-    const victimResult = await saveVictim(personResult.id, reportResult.id, connection)
-    const witnessResult = await saveWitness(personResult.id, reportResult.id, connection)
+    console.log('reportResult', reportResult)
+    const reportedPersonResult = await savePerson(reported, connection)
+    console.log('reportedPersonResult', reportedPersonResult)
+    const victimPersonResult = await savePerson(victim, connection)
+    console.log('victimPersonResult', victimPersonResult)
+    const witnessPersonResult = await savePerson(witness, connection)
+    console.log('witnessPersonResult', witnessPersonResult)
 
-    // Crear objeto de datos
+    // datos de las personas relacionadas con el reporte
+    const reportedResult = await saveReported(reportedPersonResult.id, reportResult.id, reported, connection)
+    console.log('reportedResult', reportedResult)
+    const victimResult = await saveVictim(victimPersonResult.id, reportResult.id, connection)
+    console.log('victimResult', victimResult)
+    const witnessResult = await saveWitness(witnessPersonResult.id, reportResult.id, connection)
+    console.log('witnessResult', witnessResult)
+
+    // objeto de datos
     const formData = {
       reporter: reporterResult,
       location: locationResult,
-      person: personResult,
       report: reportResult,
-      reported: reportedResult,
+      reportedPerson: reportedPersonResult,
+      victimPerson: victimPersonResult,
+      witnessPerson: witnessPersonResult,
+      reported: reportedResult || [],
       victims: victimResult || [],
       witness: witnessResult || []
     }

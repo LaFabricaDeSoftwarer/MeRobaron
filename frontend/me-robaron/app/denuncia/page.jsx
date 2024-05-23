@@ -6,6 +6,7 @@ import Reporter from './reporterForm/ReporterForm'
 import PeopleInvolved from './peopleInvolved/PeopleInvolved'
 import Report from './reportForm/ReportForm'
 import { saveFormData } from '../services/apiServices'
+import { useLocation, LocationProvider } from '../context/LocationContext'
 const steps = [
   'Denunciante',
   'Personas involucradas',
@@ -15,11 +16,14 @@ const steps = [
 
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
-  const [selectedLocation, setSelectedLocation] = useState({
-    direccion: '',
-    latitud: 0,
-    longitud: 0
-  })
+  const { selectedLocation } = useLocation(LocationProvider)
+  console.log('selected Location in context:', selectedLocation)
+
+  // const [selectedLocation, setSelectedLocation] = useState({
+  //   direccion: '',
+  //   latitud: 0,
+  //   longitud: 0
+  // })
 
   useEffect(() => {
     formik.setFieldValue('location', selectedLocation)
@@ -110,7 +114,6 @@ const Form = () => {
           <Report
             formik={formik}
             selectedLocation={selectedLocation}
-            setSelectedLocation={setSelectedLocation}
           />
         )
       case 3:

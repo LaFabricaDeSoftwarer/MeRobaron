@@ -2,14 +2,12 @@ import React, { useState } from 'react'
 import { GoogleMap, Marker } from '@react-google-maps/api'
 import FormInput from '@/app/components/FormInput'
 import LocationSearch from '@/app/components/LocationSearch'
-import { LocationProvider, useLocation } from '@/app/context/LocationContext'
 
 const center = { lat: -31.4167, lng: -64.1833 }
 const zoom = 12
 
-const Report = ({ selectedLocation, setSelectedLocation, formik }) => {
+const Report = ({ selectedLocation, formik }) => {
   const { values, setFieldValue, handleChange } = formik
-  const { locationSaved } = useLocation(LocationProvider)
   const Map = GoogleMap
   const [location, setLocation] = useState(selectedLocation || {
     direccion: '',
@@ -19,12 +17,10 @@ const Report = ({ selectedLocation, setSelectedLocation, formik }) => {
 
   const handleLocationSelect = (selectedLocation) => {
     setLocation(selectedLocation)
-    setSelectedLocation(selectedLocation)
+    setFieldValue('location', selectedLocation)
+    console.log('selected Location in Report:', selectedLocation)
   }
 
-  if (locationSaved) {
-    console.log('direccion guardada en el contexto:', locationSaved)
-  }
   return (
     <>
       <h1 className='text-white text-xl text-center font-light'>Detalles de la denuncia</h1>

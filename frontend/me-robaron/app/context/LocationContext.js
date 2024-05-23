@@ -12,14 +12,12 @@ export const LocationProvider = ({ children }) => {
     longitud: 0
   })
 
-  const locationSaved = (newAddress) => {
-    const { direccion, latitud, longitud } = newAddress
-    setSelectedLocation({ direccion, latitud, longitud })
-    console.log('direccion guardada en el contexto:', newAddress)
+  const handleLocationSelect = (location) => {
+    setSelectedLocation(location)
   }
 
   return (
-    <LocationContext.Provider value={{ selectedLocation, setSelectedLocation, locationSaved }}>
+    <LocationContext.Provider value={{ selectedLocation, handleLocationSelect }}>
       {children}
     </LocationContext.Provider>
   )

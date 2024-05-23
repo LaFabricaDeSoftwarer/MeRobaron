@@ -5,10 +5,11 @@ import usePlacesAutocomplete, {
 } from 'use-places-autocomplete'
 import SearchInput from './SearchInput'
 import Suggestions from './Suggestions'
-import { LocationProvider, useLocation } from '../context/LocationContext'
+import { useLocation, LocationProvider } from '../context/LocationContext'
 
 const LocationSearch = ({ onLocationSelect }) => {
-  const { locationSaved, selectedLocation } = useLocation(LocationProvider) // Acceder al contexto
+  const { selectedLocation, handleLocationSelect } = useLocation(LocationProvider)
+
   const [searchValue, setSearchValue] = useState(selectedLocation.direccion || '')
 
   const {
@@ -40,7 +41,7 @@ const LocationSearch = ({ onLocationSelect }) => {
       if (results && results.length > 0) {
         const { lat, lng } = await getLatLng(results[0])
         const location = { direccion: address, latitud: lat, longitud: lng }
-        locationSaved(location) // Actualizar contexto
+        handleLocationSelect(location)
         onLocationSelect(location)
         console.log('selected Location:', location)
       } else {

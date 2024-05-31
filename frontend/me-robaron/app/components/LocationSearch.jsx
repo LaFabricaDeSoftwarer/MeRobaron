@@ -7,7 +7,7 @@ import SearchInput from './SearchInput'
 import Suggestions from './Suggestions'
 import { useLocation, LocationProvider } from '../context/LocationContext'
 
-const LocationSearch = ({ onLocationSelect }) => {
+const LocationSearch = ({ onLocationSelect, errors, touched, handleBlur }) => {
   const { selectedLocation, handleLocationSelect } = useLocation(LocationProvider)
 
   const [searchValue, setSearchValue] = useState(selectedLocation.direccion || '')
@@ -67,7 +67,8 @@ const LocationSearch = ({ onLocationSelect }) => {
 
   return (
     <>
-      <SearchInput value={value || searchValue} onChange={handleInputChange} />
+      <SearchInput value={value || searchValue} onChange={handleInputChange} onBlur={handleBlur} />
+      {touched && errors && errors.direccion && <div className='text-danger'>{errors.direccion}</div>}
       {showSuggestions && status === 'OK' && data && (
         <Suggestions suggestions={data} handleSuggestionClick={handleSuggestionClick} />
       )}

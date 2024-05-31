@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FormInput = ({ name, placeholder, type, label, value, onChange }) => (
+const FormInput = ({ name, placeholder, type, label, value, onChange, onBlur }) => (
 
   <div className='col-span-1'>
     <label className='block text-white text-sm pb-2'>{label}</label>
@@ -12,6 +12,7 @@ const FormInput = ({ name, placeholder, type, label, value, onChange }) => (
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      onBlur={onBlur}
     />
   </div>
 )

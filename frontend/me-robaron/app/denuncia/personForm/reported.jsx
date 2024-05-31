@@ -3,14 +3,13 @@ import FormInput from '../../components/FormInput'
 import FormTextarea from '../../components/FormTextarea'
 import { personAtributes } from '@/app/utils/personAtributtes'
 
-const Reported = ({ formik }) => {
-  const { values, handleChange } = formik
+const Reported = ({ values, errors, touched, handleChange, handleBlur }) => {
   const reported = values.reported
 
   return (
-    <section className='grid grid-cols-2 gap-1'>
-      {
-        personAtributes.map((attribute, index) => (
+    <div className='grid grid-cols-2 gap-1'>
+      {personAtributes.map((attribute, index) => (
+        <div key={index}>
           <FormInput
             type={attribute.type}
             label={attribute.label}
@@ -19,15 +18,17 @@ const Reported = ({ formik }) => {
             onChange={handleChange}
             name={`reported.${attribute.name}`}
             value={reported[attribute.name] || ''}
+            onBlur={handleBlur}
           />
-        ))
-      }
+        </div>
+      ))}
       <FormTextarea
         label='Vestimenta'
         name='reported.vestimenta'
         placeholder='Vestimenta'
         onChange={handleChange}
         value={reported.vestimenta || ''}
+        onBlur={handleBlur}
       />
       <FormTextarea
         label='Apariencia'
@@ -35,8 +36,9 @@ const Reported = ({ formik }) => {
         placeholder='Apariencia'
         onChange={handleChange}
         value={reported.apariencia || ''}
+        onBlur={handleBlur}
       />
-    </section>
+    </div>
   )
 }
 

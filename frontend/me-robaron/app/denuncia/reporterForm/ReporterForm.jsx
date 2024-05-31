@@ -3,8 +3,7 @@ import FormInput from '@/app/components/FormInput'
 import { reporterAtributtes } from '@/app/utils/reporterAtributtes'
 import Checkbox from '@/app/components/FormCheckbox'
 
-const Reporter = ({ formik }) => {
-  const { values, handleChange } = formik
+const Reporter = ({ values, errors, touched, handleChange, handleBlur }) => {
   const reporter = values.reporter
 
   return (
@@ -16,7 +15,11 @@ const Reporter = ({ formik }) => {
           name='reporter.aceptoCondicion'
           value={reporter.aceptoCondicion}
           onChange={handleChange}
+          onBlur={handleBlur}
         />
+        {touched.reporter?.aceptoCondicion && errors.reporter?.aceptoCondicion && (
+          <div className='text-danger'>{errors.reporter.aceptoCondicion}</div>
+        )}
         {reporterAtributtes.map((attribute, index) => (
           <div key={index}>
             <FormInput
@@ -25,7 +28,11 @@ const Reporter = ({ formik }) => {
               name={`reporter.${attribute.name}`}
               value={reporter[attribute.name] || ''}
               onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {touched.reporter?.[attribute.name] && errors.reporter?.[attribute.name] && (
+              <div className='text-danger'>{errors.reporter[attribute.name]}</div>
+            )}
           </div>
         ))}
       </section>

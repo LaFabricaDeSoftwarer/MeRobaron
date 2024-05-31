@@ -11,7 +11,8 @@ module.exports = {
       grey: '#d5dae1',
       white: '#e5ecee',
       dark: '#0a1b2b',
-      medium: '#2a3439'
+      medium: '#2a3439',
+      danger: '#9f1239'
 
     },
     fontFamily: {

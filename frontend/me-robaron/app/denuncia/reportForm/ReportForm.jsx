@@ -6,8 +6,7 @@ import LocationSearch from '@/app/components/LocationSearch'
 const center = { lat: -31.4167, lng: -64.1833 }
 const zoom = 12
 
-const Report = ({ selectedLocation, formik }) => {
-  const { values, setFieldValue, handleChange } = formik
+const Report = ({ selectedLocation, values, errors, touched, handleChange, setFieldValue, handleBlur }) => {
   const Map = GoogleMap
   const [location, setLocation] = useState(selectedLocation || {
     direccion: '',
@@ -18,7 +17,6 @@ const Report = ({ selectedLocation, formik }) => {
   const handleLocationSelect = (selectedLocation) => {
     setLocation(selectedLocation)
     setFieldValue('location', selectedLocation)
-    console.log('selected Location in Report:', selectedLocation)
   }
 
   return (
@@ -33,7 +31,9 @@ const Report = ({ selectedLocation, formik }) => {
               value={values.report.fecha || ''}
               name='report.fecha'
               onChange={(e) => setFieldValue('report.fecha', e.target.value)}
+              onBlur={handleBlur}
             />
+            {touched.report?.fecha && errors.report?.fecha && (<div className='text-danger'>{errors.report.fecha}</div>)}
           </div>
           <div className='w-full pb-4'>
             <label className='block text-white text-sm pb-2'>Detalle</label>
@@ -44,13 +44,15 @@ const Report = ({ selectedLocation, formik }) => {
               placeholder='Detalle'
               value={values.report.detalle || ''}
               onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {touched.report?.detalle && errors.report?.detalle && (<div className='text-danger'>{errors.report.detalle}</div>)}
           </div>
         </div>
         <div className='w-full flex flex-col h-full'>
           <div className='w-full relative pb-6'>
             <label className='block text-white text-sm pb-2'>Ubicación del hecho</label>
-            <LocationSearch onLocationSelect={handleLocationSelect} />
+            <LocationSearch onLocationSelect={handleLocationSelect} errors={errors} touched={touched} handleBlur={handleBlur} />
           </div>
           <div className='w-full h-80 max-h-20'>
             <label className='block text-white text-sm pb-2'>Geolocalización</label>

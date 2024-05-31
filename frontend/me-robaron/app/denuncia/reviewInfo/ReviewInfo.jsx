@@ -6,8 +6,7 @@ import { reportedAtributtes } from '@/app/utils/reportedAtributtes'
 import { personAtributes } from '@/app/utils/personAtributtes'
 import { detailAtributtes } from '@/app/utils/detailAtributtes'
 
-const ReviewInfo = ({ formik }) => {
-  const { values } = formik
+const ReviewInfo = ({ values }) => {
   return (
     <>
       <h1 className='text-white text-xl text-center font-ligh'>Resumen</h1>

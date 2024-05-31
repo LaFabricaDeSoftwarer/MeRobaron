@@ -5,6 +5,7 @@ import ReviewInfo from './reviewInfo/ReviewInfo'
 import Reporter from './reporterForm/ReporterForm'
 import PeopleInvolved from './peopleInvolved/PeopleInvolved'
 import Report from './reportForm/ReportForm'
+import { validationSchema } from '../utils/schemas/validationSchemas'
 import { saveFormData } from '../services/apiServices'
 import { useLocation, LocationProvider } from '../context/LocationContext'
 const steps = [
@@ -17,16 +18,9 @@ const steps = [
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
   const { selectedLocation } = useLocation(LocationProvider)
-  console.log('selected Location in context:', selectedLocation)
-
-  // const [selectedLocation, setSelectedLocation] = useState({
-  //   direccion: '',
-  //   latitud: 0,
-  //   longitud: 0
-  // })
 
   useEffect(() => {
-    formik.setFieldValue('location', selectedLocation)
+    setFieldValue('location', selectedLocation)
   }, [selectedLocation])
 
   const handleBack = () => {
@@ -37,7 +31,7 @@ const Form = () => {
     setActiveStep((prevStep) => prevStep + 1)
   }
 
-  const formik = useFormik({
+  const { values, errors, touched, handleChange, handleBlur, setFieldValue, handleSubmit } = useFormik({
     initialValues: {
       reporter: {
         email: '',
@@ -88,13 +82,14 @@ const Form = () => {
         ciudad: ''
       }
     },
+    validationSchema,
     onSubmit: async (values) => {
-      console.log('Valores enviados:', values)
       try {
+        await validationSchema.validate(values)
         const data = await saveFormData(values)
         console.log('Respuesta del servidor:', data)
       } catch (error) {
-        console.error('Error al enviar la solicitud:', error)
+        console.error('Errores de validación:', error.inner)
       }
     }
   })
@@ -102,22 +97,22 @@ const Form = () => {
   const formContent = (step) => {
     switch (step) {
       case 0:
-        return <Reporter formik={formik} />
+        return <Reporter values={values} errors={errors} touched={touched} handleChange={handleChange} handleBlur={handleBlur} />
       case 1:
         return (
           <PeopleInvolved
-            formik={formik}
+            values={values} errors={errors} touched={touched} handleChange={handleChange}
           />
         )
       case 2:
         return (
           <Report
-            formik={formik}
+            values={values} errors={errors} touched={touched} handleChange={handleChange}
             selectedLocation={selectedLocation}
           />
         )
       case 3:
-        return <ReviewInfo formik={formik} />
+        return <ReviewInfo values={values} errors={errors} touched={touched} handleChange={handleChange} />
       default:
         return <div>404: Not Found</div>
     }
@@ -158,7 +153,7 @@ const Form = () => {
           ? (
             <button
               className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-              onClick={formik.handleSubmit}
+              onClick={handleSubmit}
             >
               Enviar
             </button>

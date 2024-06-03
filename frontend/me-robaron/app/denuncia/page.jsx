@@ -8,6 +8,7 @@ import Report from './reportForm/ReportForm'
 import { validationSchema } from '../utils/schemas/validationSchemas'
 import { saveFormData } from '../services/apiServices'
 import { useLocation, LocationProvider } from '../context/LocationContext'
+import toast, { Toaster } from 'react-hot-toast'
 const steps = [
   'Denunciante',
   'Personas involucradas',
@@ -87,9 +88,14 @@ const Form = () => {
       try {
         await validationSchema.validate(values)
         const data = await saveFormData(values)
-        console.log('Respuesta del servidor:', data)
+        console.log('data', data)
+        if (data) {
+          console.log('Denuncia enviada con éxito')
+          toast.success('Denuncia enviada con éxito')
+        }
       } catch (error) {
         console.error('Errores de validación:', error.inner)
+        toast.error('Error al enviar la denuncia, por favor revise los campos')
       }
     }
   })
@@ -146,27 +152,34 @@ const Form = () => {
           className='bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
           disabled={activeStep === 0}
           onClick={handleBack}
+          type='button'
         >
           Atrás
         </button>
         {activeStep === steps.length - 1
           ? (
-            <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-              onClick={handleSubmit}
-            >
-              Enviar
-            </button>
+            <>
+              <button
+                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                type='submit'
+                onClick={handleSubmit}
+              >
+                Enviar
+              </button>
+              <Toaster position='bottom-right' reverseOrder={false} />
+            </>
             )
           : (
             <button
               className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
               onClick={handleNext}
+              type='button'
             >
               Siguiente
             </button>
             )}
       </section>
+
     </main>
   )
 }

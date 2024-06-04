@@ -19,6 +19,7 @@ const steps = [
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
   const { selectedLocation } = useLocation(LocationProvider)
+  const [peopleList, setPeopleList] = useState([])
 
   useEffect(() => {
     setFieldValue('location', selectedLocation)
@@ -103,22 +104,23 @@ const Form = () => {
   const formContent = (step) => {
     switch (step) {
       case 0:
-        return <Reporter values={values} errors={errors} touched={touched} handleChange={handleChange} handleBlur={handleBlur} />
+        return <Reporter values={values} errors={errors} touched={touched} handleChange={handleChange} handleBlur={handleBlur} setFieldValue={setFieldValue} />
       case 1:
         return (
           <PeopleInvolved
-            values={values} errors={errors} touched={touched} handleChange={handleChange}
+            values={values} errors={errors} touched={touched} handleChange={handleChange} setFieldValue={setFieldValue} setPeopleListParent={setPeopleList}
+
           />
         )
       case 2:
         return (
           <Report
             values={values} errors={errors} touched={touched} handleChange={handleChange}
-            selectedLocation={selectedLocation}
+            selectedLocation={selectedLocation} setFieldValue={setFieldValue}
           />
         )
       case 3:
-        return <ReviewInfo values={values} errors={errors} touched={touched} handleChange={handleChange} />
+        return <ReviewInfo values={values} errors={errors} touched={touched} handleChange={handleChange} peopleList={peopleList} />
       default:
         return <div>404: Not Found</div>
     }

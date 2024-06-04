@@ -18,6 +18,7 @@ const steps = [
 const Form = () => {
   const [activeStep, setActiveStep] = useState(0)
   const { selectedLocation } = useLocation(LocationProvider)
+  const [peopleList, setPeopleList] = useState([])
 
   useEffect(() => {
     setFieldValue('location', selectedLocation)
@@ -97,22 +98,23 @@ const Form = () => {
   const formContent = (step) => {
     switch (step) {
       case 0:
-        return <Reporter values={values} errors={errors} touched={touched} handleChange={handleChange} handleBlur={handleBlur} />
+        return <Reporter values={values} errors={errors} touched={touched} handleChange={handleChange} handleBlur={handleBlur} setFieldValue={setFieldValue} />
       case 1:
         return (
           <PeopleInvolved
-            values={values} errors={errors} touched={touched} handleChange={handleChange}
+            values={values} errors={errors} touched={touched} handleChange={handleChange} setFieldValue={setFieldValue} setPeopleListParent={setPeopleList}
+
           />
         )
       case 2:
         return (
           <Report
             values={values} errors={errors} touched={touched} handleChange={handleChange}
-            selectedLocation={selectedLocation}
+            selectedLocation={selectedLocation} setFieldValue={setFieldValue}
           />
         )
       case 3:
-        return <ReviewInfo values={values} errors={errors} touched={touched} handleChange={handleChange} />
+        return <ReviewInfo values={values} errors={errors} touched={touched} handleChange={handleChange} peopleList={peopleList} />
       default:
         return <div>404: Not Found</div>
     }
@@ -146,6 +148,7 @@ const Form = () => {
           className='bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
           disabled={activeStep === 0}
           onClick={handleBack}
+          type='button'
         >
           Atrás
         </button>
@@ -154,6 +157,7 @@ const Form = () => {
             <button
               className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
               onClick={handleSubmit}
+              type='submit'
             >
               Enviar
             </button>
@@ -162,6 +166,7 @@ const Form = () => {
             <button
               className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
               onClick={handleNext}
+              type='button'
             >
               Siguiente
             </button>

@@ -23,10 +23,6 @@ export const validationSchema = Yup.object().shape({
   }),
   report: Yup.object().shape({
     fecha: Yup.string()
-      .matches(
-        /^(0[1-9]|1[0-9]|2[0-9]|3[01])[-](0[1-9]|1[0-2])[-](19|20)\d\d$/,
-        'Formato de fecha invalido'
-      )
       .required('La fecha es requerida'),
     detalle: Yup.string()
       .min(10, 'El detalle debe tener al menos 10 caracteres')

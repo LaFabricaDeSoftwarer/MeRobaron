@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape({
   reporter: Yup.object().shape({
-    aceptoCondicion: Yup.boolean().required('Este campo es requerido'),
+    aceptaCondicion: Yup.boolean().required('Este campo es requerido'),
     email: Yup.string().email('Formato de email invalido').required('El email es requerido'),
     apellido: Yup.string().required('El apellido es requerido'),
     nombre: Yup.string()
@@ -14,6 +14,11 @@ export const validationSchema = Yup.object().shape({
     nroDocumento: Yup.string()
       .matches(/^[0-9]+$/, 'El numero de documento debe ser un numero')
       .required('El numero de documento es requerido'),
+    edad: Yup.number()
+      .required('La edad es requerida'),
+    telefono: Yup.string()
+      .matches(/^[0-9]+$/, 'El telefono debe ser un numero')
+      .required('El telefono es requerido'),
     calle: Yup.string().required('La calle es requerida'),
     numero: Yup.string()
       .matches(/^[0-9]+$/, 'El numero debe ser un numero')
@@ -42,11 +47,6 @@ export const validationSchema = Yup.object().shape({
       .min(-180, 'La longitud debe ser mayor a -180')
       .max(180, 'La longitud debe ser menor a 180')
       .required('La longitud es requerida')
-  }),
-  peopleInvolved: Yup.object().shape({
-    conozcoAlDenunciado: Yup.boolean().required('Este campo es requerido'),
-    hayVictimas: Yup.boolean().required('Este campo es requerido'),
-    hayTestigos: Yup.boolean().required('Este campo es requerido')
   }),
   reported: Yup.object().shape({
     apellido: Yup.string().required('El apellido es requerido'),

@@ -7,36 +7,42 @@ const Reporter = ({ values, errors, touched, handleChange, handleBlur }) => {
   const reporter = values.reporter
 
   return (
-    <>
-      <h1 className='text-white text-xl text-center '>Datos del denunciante</h1>
-      <section className='grid grid-cols-1 md:grid-cols-2 gap-8 justify-center items-center '>
+
+    <div className='max-w-4xl mx-auto p-4'>
+      <div className='mb-4'>
+        <div className='text-white bg-danger text-xs mb-2 p-2'>Falsa denuncia: Al realizar una denuncia, Usted debe saber que si la realiza falsamente -es decir, miente en lo que nos está informando-, está cometiendo un delito con penas de prisión de dos meses a un año o multa (artículo 245 del Código Penal).</div>
         <Checkbox
-          label='Acepto la condición'
-          name='reporter.aceptoCondicion'
-          value={reporter.aceptoCondicion}
+          label='Acepto que he comprendido y que todo lo que informaré es verdad.'
+          name='reporter.aceptaCondicion'
+          value={reporter.aceptaCondicion}
           onChange={handleChange}
           onBlur={handleBlur}
         />
-        {touched.reporter?.aceptoCondicion && errors.reporter?.aceptoCondicion && (
-          <div className='text-danger'>{errors.reporter.aceptoCondicion}</div>
-        )}
+        {errors.reporter?.aceptaCondicion
+          ? (
+            <div className='text-red-500 text-sm'>{errors.reporter?.aceptaCondicion}</div>
+            )
+          : null}
+      </div>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         {reporterAtributtes.map((attribute, index) => (
           <div key={index}>
             <FormInput
               {...attribute}
-              key={index}
               name={`reporter.${attribute.name}`}
               value={reporter[attribute.name] || ''}
               onChange={handleChange}
               onBlur={handleBlur}
             />
-            {touched.reporter?.[attribute.name] && errors.reporter?.[attribute.name] && (
-              <div className='text-danger'>{errors.reporter[attribute.name]}</div>
-            )}
+            {errors.reporter?.[attribute.name]
+              ? (
+                <div className='text-red-500 text-sm'>{errors.reporter[attribute.name]}</div>
+                )
+              : null}
           </div>
         ))}
-      </section>
-    </>
+      </div>
+    </div>
   )
 }
 

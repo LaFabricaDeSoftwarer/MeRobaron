@@ -1,7 +1,7 @@
 export class Reporter {
   constructor (
     email,
-    aceptoCondicion,
+    aceptaCondicion,
     apellido,
     nombre,
     tipoDocumento,
@@ -15,7 +15,7 @@ export class Reporter {
 
   ) {
     this.email = email
-    this.aceptoCondicion = aceptoCondicion
+    this.aceptaCondicion = aceptaCondicion
     this.apellido = apellido
     this.nombre = nombre
     this.tipoDocumento = tipoDocumento
@@ -47,7 +47,7 @@ export class Reporter {
     try {
       const [result] = await connectionPool.query(insertReporterSql, [
         this.email,
-        this.aceptoCondicion,
+        this.aceptaCondicion,
         this.apellido,
         this.nombre,
         this.tipoDocumento,

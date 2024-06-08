@@ -9,11 +9,12 @@ import { validationSchema } from '../utils/schemas/validationSchemas'
 import { saveFormData } from '../services/apiServices'
 import { useLocation, LocationProvider } from '../context/LocationContext'
 import toast, { Toaster } from 'react-hot-toast'
+import * as Yup from 'yup'
 const steps = [
   'Denunciante',
   'Personas involucradas',
   'Denuncia',
-  'Resumen y envio'
+  'Resumen y envío'
 ]
 
 const Form = () => {
@@ -21,23 +22,11 @@ const Form = () => {
   const { selectedLocation } = useLocation(LocationProvider)
   const [peopleList, setPeopleList] = useState([])
 
-  useEffect(() => {
-    setFieldValue('location', selectedLocation)
-  }, [selectedLocation])
-
-  const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1)
-  }
-
-  const handleNext = async () => {
-    setActiveStep((prevStep) => prevStep + 1)
-  }
-
-  const { values, errors, touched, handleChange, handleBlur, setFieldValue, handleSubmit } = useFormik({
+  const formik = useFormik({
     initialValues: {
       reporter: {
         email: '',
-        aceptoCondicion: false,
+        aceptaCondicion: false,
         apellido: '',
         nombre: '',
         tipoDocumento: '',
@@ -61,9 +50,11 @@ const Form = () => {
         apellido: '',
         nombre: '',
         calle: '',
-        numero: '',
         barrio: '',
+        numero: '',
         ciudad: '',
+        tipoDocumento: '',
+        nroDocumento: '',
         vestimenta: '',
         apariencia: ''
       },
@@ -71,23 +62,27 @@ const Form = () => {
         apellido: '',
         nombre: '',
         calle: '',
-        numero: '',
         barrio: '',
-        ciudad: ''
+        numero: '',
+        ciudad: '',
+        tipoDocumento: '',
+        nroDocumento: ''
       },
       witness: {
         apellido: '',
         nombre: '',
         calle: '',
-        numero: '',
         barrio: '',
-        ciudad: ''
+        numero: '',
+        ciudad: '',
+        tipoDocumento: '',
+        nroDocumento: ''
       }
     },
     validationSchema,
     onSubmit: async (values) => {
+      console.log('values', values)
       try {
-        await validationSchema.validate(values)
         const data = await saveFormData(values)
         console.log('data', data)
         if (data) {
@@ -101,6 +96,47 @@ const Form = () => {
     }
   })
 
+  const { values, errors, touched, handleChange, handleBlur, setFieldValue, handleSubmit, setErrors } = formik
+
+  useEffect(() => {
+    setFieldValue('location', selectedLocation)
+  }, [selectedLocation])
+
+  const handleBack = () => {
+    setActiveStep((prevStep) => prevStep - 1)
+  }
+
+  const handleNext = async () => {
+    const currentStepSchema = getCurrentStepSchema(activeStep)
+    try {
+      await currentStepSchema.validate(values, { abortEarly: false })
+      setActiveStep((prevStep) => prevStep + 1)
+    } catch (validationErrors) {
+      const formikErrors = validationErrors.inner.reduce((acc, error) => {
+        acc[error.path] = error.message
+        console.log('error', error)
+        return acc
+      }, {})
+      setErrors(formikErrors)
+      console.log('formikErrors', formikErrors)
+    }
+  }
+
+  const getCurrentStepSchema = (step) => {
+    switch (step) {
+      case 0:
+        return Yup.object().shape({ reporter: validationSchema.fields.reporter })
+      case 1:
+        return Yup.object().shape({ peopleInvolved: validationSchema.fields.peopleInvolved })
+      case 2:
+        return Yup.object().shape({ report: validationSchema.fields.report })
+      case 3:
+        return validationSchema
+      default:
+        return Yup.object()
+    }
+  }
+
   const formContent = (step) => {
     switch (step) {
       case 0:
@@ -109,7 +145,6 @@ const Form = () => {
         return (
           <PeopleInvolved
             values={values} errors={errors} touched={touched} handleChange={handleChange} setFieldValue={setFieldValue} setPeopleListParent={setPeopleList}
-
           />
         )
       case 2:
@@ -127,61 +162,57 @@ const Form = () => {
   }
 
   return (
-    <main className='flex flex-col justify-between h-screen p-8 gap-10'>
-      <section className='flex md:flex-row flex-col w-full h-screen'>
-        <div className='md:border-r-2 md:border-r-medium md:w-1/5 flex'>
-          <ul className='md:w-56 flex md:flex-col w-full justify-evenly '>
+    <main className='container mx-auto'>
+      <section className='max-w-4xl mx-auto bg-newdark rounded-md p-4 text-white'>
+        <div className='flex flex-col lg:flex-row lg:gap-10'>
+          <ul className='lg:w-1/4 w-full lg:border-r-2 border-green mb-4 lg:mb-0'>
             {steps.map((label, index) => (
-              <li key={index}>
+              <li key={index} className='mb-6'>
                 <span
-                  className={`rounded-full px-2 py-1 text-sm text-white font-light bg-${
-                    index === activeStep ? 'green' : 'trasnsparent'
-                  }`}
+                  className={`rounded-full px-2 py-1 text-sm text-white font-light border-2 border-green ${index === activeStep ? 'bg-green' : 'bg-transparent'}`}
                 >
                   {index + 1}
                 </span>
-                <span className='md:px-2 md:text-sm md:text-white md:font-light md:visible invisible'>{label}</span>
+                <span className='ml-2 text-sm text-gray-700'>{label}</span>
               </li>
             ))}
           </ul>
-        </div>
-        <form className='md:w-4/5 pl-5 flex flex-col justify-center gap-10'>
-          {formContent(activeStep)}
-        </form>
-      </section>
-      <section className='flex justify-between w-full'>
-        <button
-          className='bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
-          disabled={activeStep === 0}
-          onClick={handleBack}
-          type='button'
-        >
-          Atrás
-        </button>
-        {activeStep === steps.length - 1
-          ? (
-            <>
+          <form className='lg:w-3/4 w-full' onSubmit={handleSubmit}>
+            {formContent(activeStep)}
+            <div className='flex justify-between mt-4'>
               <button
-                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-                type='submit'
-                onClick={handleSubmit}
+                className='bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                type='button'
               >
-                Enviar
+                Atrás
               </button>
-              <Toaster position='bottom-right' reverseOrder={false} />
-            </>
-            )
-          : (
-            <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-              onClick={handleNext}
-              type='button'
-            >
-              Siguiente
-            </button>
-            )}
+              {activeStep === steps.length - 1
+                ? (
+                  <>
+                    <button
+                      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                      type='submit'
+                    >
+                      Enviar
+                    </button>
+                    <Toaster position='bottom-right' reverseOrder={false} />
+                  </>
+                  )
+                : (
+                  <button
+                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                    onClick={handleNext}
+                    type='button'
+                  >
+                    Siguiente
+                  </button>
+                  )}
+            </div>
+          </form>
+        </div>
       </section>
-
     </main>
   )
 }

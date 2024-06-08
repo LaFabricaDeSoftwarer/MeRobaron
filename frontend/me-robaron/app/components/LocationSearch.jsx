@@ -68,7 +68,6 @@ const LocationSearch = ({ onLocationSelect, errors, touched, handleBlur }) => {
   return (
     <>
       <SearchInput value={value || searchValue} onChange={handleInputChange} onBlur={handleBlur} />
-      {touched && errors && errors.direccion && <div className='text-danger'>{errors.direccion}</div>}
       {showSuggestions && status === 'OK' && data && (
         <Suggestions suggestions={data} handleSuggestionClick={handleSuggestionClick} />
       )}

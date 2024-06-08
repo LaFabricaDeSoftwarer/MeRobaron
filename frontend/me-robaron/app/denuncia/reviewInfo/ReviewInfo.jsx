@@ -5,53 +5,50 @@ import { detailAtributtes } from '@/app/utils/detailAtributtes'
 
 const ReviewInfo = ({ values, peopleList }) => {
   return (
-    <>
-      <h1 className='text-white text-xl text-center font-light'>Resumen</h1>
-      <section className='text-white flex flex-col gap-5 w-full h-full justify-center'>
 
-        <div className='flex flex-col items-start w-full'>
-          <h2 className='text-sm py-2 underline'>Denunciante</h2>
-          {reporterAtributtes.map((atributte) => (
-            <SummaryList
-              key={atributte.name}
-              label={atributte.label}
-              value={values.reporter[atributte.name]}
-            />
-          ))}
+    <div>
+      <div className='flex flex-col items-start w-full'>
+        <h2 className='text-sm py-2 underline'>Denunciante</h2>
+        {reporterAtributtes.map((atributte) => (
+          <SummaryList
+            key={atributte.name}
+            label={atributte.label}
+            value={values.reporter[atributte.name]}
+          />
+        ))}
 
-          <h2 className='text-sm py-2 underline'>Detalle del Robo</h2>
-          {detailAtributtes.map((atributte) => (
-            <SummaryList
-              key={atributte.name}
-              label={atributte.label}
-              value={values.report[atributte.name]}
-            />
-          ))}
-        </div>
-
-        <h2 className='text-sm py-2 underline'>Personas involucradas</h2>
-        {peopleList.length > 0 && (
-          <>
-            <table>
-              <thead>
-                <tr className='text-white text-sm'>
-                  <th>Nombre y Apellido</th>
-                  <th>Rol</th>
+        <h2 className='text-sm py-2 underline'>Detalle del Robo</h2>
+        {detailAtributtes.map((atributte) => (
+          <SummaryList
+            key={atributte.name}
+            label={atributte.label}
+            value={values.report[atributte.name]}
+          />
+        ))}
+      </div>
+      <h2 className='text-sm py-2 underline'>Personas involucradas</h2>
+      {peopleList.length > 0 && (
+        <>
+          <table>
+            <thead>
+              <tr className='text-white text-sm'>
+                <th>Nombre y Apellido</th>
+                <th>Rol</th>
+              </tr>
+            </thead>
+            <tbody>
+              {peopleList.map((person, index) => (
+                <tr key={index}>
+                  <td className='text-white text-xs'>{person.nombre}, {person.apellido}</td>
+                  <td className='text-white text-xs'>{person.rol}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {peopleList.map((person, index) => (
-                  <tr key={index}>
-                    <td className='text-white text-xs'>{person.nombre}, {person.apellido}</td>
-                    <td className='text-white text-xs'>{person.rol}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </>
-        )}
-      </section>
-    </>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+    </div>
+
   )
 }
 

@@ -30,6 +30,18 @@ export const reporterAtributtes = [
     placeholder: 'Numero de documento'
   },
   {
+    label: 'Edad',
+    type: 'number',
+    name: 'edad',
+    placeholder: 'Edad'
+  },
+  {
+    label: 'Telefono',
+    type: 'text',
+    name: 'telefono',
+    placeholder: 'Telefono'
+  },
+  {
     label: 'Calle',
     type: 'text',
     name: 'calle',

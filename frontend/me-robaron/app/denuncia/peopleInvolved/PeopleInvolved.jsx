@@ -26,16 +26,10 @@ const PeopleInvolved = ({ values, errors, touched, handleChange, handleBlur, set
     let newPerson = {}
     if (type === 'denunciado') {
       newPerson = { nombre: values.reported.nombre, apellido: values.reported.apellido, rol: 'denunciado' }
-      setFieldValue('reported.nombre', '')
-      setFieldValue('reported.apellido', '')
     } else if (type === 'victima') {
       newPerson = { nombre: values.victim.nombre, apellido: values.victim.apellido, rol: 'victima' }
-      setFieldValue('victim.nombre', '')
-      setFieldValue('victim.apellido', '')
     } else if (type === 'testigo') {
       newPerson = { nombre: values.witness.nombre, apellido: values.witness.apellido, rol: 'testigo' }
-      setFieldValue('witness.nombre', '')
-      setFieldValue('witness.apellido', '')
     }
 
     if (newPerson.nombre && newPerson.apellido) {
@@ -59,9 +53,8 @@ const PeopleInvolved = ({ values, errors, touched, handleChange, handleBlur, set
   )
 
   return (
-    <>
-      <h1 className='text-white text-xl text-center pb-10'>Personas involucradas</h1>
-      <section className='flex flex-col gap-5 w-full h-full items-start'>
+    <div className='max-w-4xl mx-auto p-4'>
+      <div className='min-h-[400px] flex flex-col'>
         <FormCheckbox
           label='Conozco al denunciado'
           name='report.conozcoAlDenunciado'
@@ -88,29 +81,30 @@ const PeopleInvolved = ({ values, errors, touched, handleChange, handleBlur, set
           onBlur={handleBlur}
         />
         {values.report.hayTestigos && renderPersonForm('testigo')}
-      </section>
 
-      {peopleList.length > 0 && (
-        <>
-          <table>
-            <thead>
-              <tr className='text-white text-sm'>
-                <th>Nombre y Apellido</th>
-                <th>Rol</th>
-              </tr>
-            </thead>
-            <tbody>
-              {peopleList.map((person, index) => (
-                <tr key={index}>
-                  <td className='text-white text-xs'>{person.nombre}, {person.apellido}</td>
-                  <td className='text-white text-xs'>{person.rol}</td>
+        {peopleList.length > 0 && (
+          <div className='mt-4'>
+            <table className='min-w-full table-auto'>
+              <thead className='bg-gray-200 text-gray-600 text-sm'>
+                <tr>
+                  <th className='px-4 py-2'>Nombre</th>
+                  <th className='px-4 py-2'>Rol</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
-    </>
+              </thead>
+              <tbody className='bg-white'>
+                {peopleList.map((person, index) => (
+                  <tr key={index}>
+                    <td className='border px-4 py-2'>{person.nombre}</td>
+                    <td className='border px-4 py-2'>{person.rol}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+      </div>
+    </div>
   )
 }
 

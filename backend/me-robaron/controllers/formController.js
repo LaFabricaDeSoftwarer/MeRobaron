@@ -11,7 +11,7 @@ import connectionPool from '../dbconfig.js'
 async function saveReporter (reporterData, connectionPool) {
   const reporterObj = new Reporter(
     reporterData.email,
-    reporterData.aceptoCondicion,
+    reporterData.aceptaCondicion,
     reporterData.apellido,
     reporterData.nombre,
     reporterData.tipoDocumento,
@@ -40,9 +40,11 @@ async function savePerson (personData, connectionPool) {
     personData.apellido,
     personData.nombre,
     personData.calle,
-    personData.numero,
     personData.barrio,
-    personData.ciudad
+    personData.numero,
+    personData.ciudad,
+    personData.tipoDocumento,
+    personData.nroDocumento
   )
   return await personObj.save(connectionPool)
 }

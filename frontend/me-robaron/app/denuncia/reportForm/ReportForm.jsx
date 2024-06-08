@@ -7,6 +7,7 @@ const center = { lat: -31.4167, lng: -64.1833 }
 const zoom = 12
 
 const Report = ({ selectedLocation, values, errors, touched, handleChange, setFieldValue, handleBlur }) => {
+  const report = values.report
   const Map = GoogleMap
   const [location, setLocation] = useState(selectedLocation || {
     direccion: '',
@@ -20,56 +21,55 @@ const Report = ({ selectedLocation, values, errors, touched, handleChange, setFi
   }
 
   return (
-    <>
-      <h1 className='text-white text-xl text-center font-light'>Detalles de la denuncia</h1>
-      <section className='flex gap-5 w-full h-full justify-center items-center'>
-        <div className='w-full flex flex-col h-full'>
-          <div className='w-full pb-4'>
-            <FormInput
-              type='date'
-              label='Fecha'
-              value={values.report.fecha || ''}
-              name='report.fecha'
-              onChange={(e) => setFieldValue('report.fecha', e.target.value)}
-              onBlur={handleBlur}
-            />
-            {touched.report?.fecha && errors.report?.fecha && (<div className='text-danger'>{errors.report.fecha}</div>)}
-          </div>
-          <div className='w-full pb-4'>
-            <label className='block text-white text-sm pb-2'>Detalle</label>
-            <textarea
-              className='w-full px-3 py-2 text-white leading-tight focus:outline-none focus:shadow-outline rounded-md bg-medium appearance-none'
-              type='text'
-              name='report.detalle'
-              placeholder='Detalle'
-              value={values.report.detalle || ''}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            {touched.report?.detalle && errors.report?.detalle && (<div className='text-danger'>{errors.report.detalle}</div>)}
-          </div>
-        </div>
-        <div className='w-full flex flex-col h-full'>
-          <div className='w-full relative pb-6'>
-            <label className='block text-white text-sm pb-2'>Ubicación del hecho</label>
-            <LocationSearch onLocationSelect={handleLocationSelect} errors={errors} touched={touched} handleBlur={handleBlur} />
-          </div>
-          <div className='w-full h-80 max-h-20'>
-            <label className='block text-white text-sm pb-2'>Geolocalización</label>
 
-            <Map
-              mapContainerClassName='h-80' zoom={zoom} center={center} options={{
-                disableDefaultUI: true
-              }}
-            >
-              {location.latitud !== 0 && <Marker
-                position={{ lat: location.latitud, lng: location.longitud }}
-                                         />}
-            </Map>
-          </div>
+    <div className='max-w-4xl mx-auto p-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 '>
+        <div>
+          <FormInput
+            type='date'
+            label='Fecha'
+            value={report.fecha || ''}
+            name='report.fecha'
+            onChange={(e) => setFieldValue('report.fecha', e.target.value)}
+            onBlur={handleBlur}
+          />
+
         </div>
-      </section>
-    </>
+        <div>
+          <label className='block text-gray-700 text-sm font-bold mb-2'>Detalle</label>
+          <textarea
+            className='w-full px-3 py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-md bg-medium appearance-none'
+            type='text'
+            name='report.detalle'
+            placeholder='Detalle'
+            value={report.detalle || ''}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+
+        </div>
+      </div>
+      <div className='mt-4'>
+        <label className='block text-gray-700 text-sm font-bold mb-2'>Ubicación del hecho</label>
+        <LocationSearch onLocationSelect={handleLocationSelect} errors={errors} touched={touched} handleBlur={handleBlur} />
+      </div>
+      <div className='mt-4'>
+        <label className='block text-gray-700 text-sm font-bold mb-2'>Geolocalización</label>
+        <div className='h-60'>
+          <Map
+            mapContainerClassName='h-full w-full rounded-md'
+            zoom={zoom}
+            center={center}
+            options={{ disableDefaultUI: true }}
+          >
+            {location.latitud !== 0 && (
+              <Marker position={{ lat: location.latitud, lng: location.longitud }} />
+            )}
+          </Map>
+        </div>
+      </div>
+    </div>
+
   )
 }
 

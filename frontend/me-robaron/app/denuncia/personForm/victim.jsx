@@ -2,7 +2,7 @@ import React from 'react'
 import FormInput from '../../components/FormInput'
 import { personAtributes } from '@/app/utils/personAtributtes'
 
-const Victim = ({ values, errors, touched, handleChange }) => {
+const Victim = ({ values, handleChange }) => {
   const victim = values.victim
 
   return (

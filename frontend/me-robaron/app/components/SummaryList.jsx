@@ -6,7 +6,7 @@ const SummaryList = ({ label, value }) => {
       <ul>
         <li>
           <span className='text-xs'>{label}: </span>
-          <span className='dark:text-gray-400'>{value}</span>
+          <span className='text-xs'>{value}</span>
         </li>
       </ul>
     </div>

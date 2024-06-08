@@ -2,7 +2,7 @@ import React from 'react'
 import FormInput from '../../components/FormInput'
 import { personAtributes } from '@/app/utils/personAtributtes'
 
-const Witness = ({ values, errors, touched, handleChange }) => {
+const Witness = ({ values, handleChange }) => {
   const witness = values.witness
 
   return (

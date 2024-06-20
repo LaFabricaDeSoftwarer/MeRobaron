@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react'
 import { validationSchema } from '../utils/schemas/validationSchemas'
 import { useLocation, LocationProvider } from '../context/LocationContext'

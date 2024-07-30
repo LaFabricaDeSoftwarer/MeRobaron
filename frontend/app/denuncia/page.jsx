@@ -128,7 +128,7 @@ const FormReport = () => {
               </div>
               <div className='w-full p-2 bg-primary h-full overflow-y-auto flex'>
                 <Form className='w-full'>
-                  <div className='h-36 flex justify-center items-center'>
+                  <div className='h-8 flex justify-center items-center'>
                     <h2 className='text-xl font-medium text-center text-dark mb-4'>{steps[step].props.stepLabel}</h2>
                   </div>
                   {steps[step]}

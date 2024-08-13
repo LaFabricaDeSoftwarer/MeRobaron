@@ -19,8 +19,8 @@ const StepList = ({ steps, currentStep }) => {
             </div>
           </li>
           {index < steps.length - 1 && (
-            <li className='flex-grow relative'>
-              <div className='absolute left-[12px] top-0 bottom-0 w-0 border-l-2 border-primary opacity-50 border-dashed' />
+            <li className='hidden md:flex-grow md:relative md:flex'>
+              <div className='md:absolute md:left-[12px] md:top-0 md:bottom-0 md:w-0 md:border-l-2 border-primary opacity-50 border-dashed' />
             </li>
           )}
         </React.Fragment>

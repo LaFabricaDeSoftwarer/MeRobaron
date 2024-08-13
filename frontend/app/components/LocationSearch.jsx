@@ -75,7 +75,7 @@ const LocationSearch = ({ onLocationSelect, initialValue = '', onChange }) => {
   return (
     <>
       <input
-        className='w-full px-3 py-1.5 text-medium focus:outline-none focus:shadow-outline appearance-none text-sm border border-light rounded-md'
+        className='w-full h-7 md:h-9  text-medium focus:outline-none focus:shadow-outline appearance-none text-sm border border-light rounded-md'
         type='text'
         value={value || searchValue}
         onChange={handleInputChange}

@@ -123,16 +123,16 @@ const FormReport = () => {
         <div className='flex justify-center items-center min-h-screen bg-gray-100'>
           <div className='w-full h-screen overflow-hidden'>
             <div className='flex flex-col md:flex-row h-full'>
-              <div className='w-full md:w-1/4 bg-secondary p-4 h-full flex items-center justify-center'>
+              <div className='w-full md:w-1/4 bg-secondary p-4 md:h-full flex items-center justify-center'>
                 <StepList steps={steps} currentStep={step} />
               </div>
-              <div className='w-full p-2 bg-primary h-full overflow-y-auto flex'>
+              <div className='w-full bg-primary h-full overflow-y-auto flex py-4 px-4'>
                 <Form className='w-full'>
                   <div className='h-8 flex justify-center items-center'>
-                    <h2 className='text-xl font-medium text-center text-dark mb-4'>{steps[step].props.stepLabel}</h2>
+                    <h2 className='text-xl font-medium text-center text-dark mb-4 pt-4'>{steps[step].props.stepLabel}</h2>
                   </div>
                   {steps[step]}
-                  <div className='mt-4 flex justify-between'>
+                  <div className='mt-2 flex justify-between'>
                     <Button
                       text='Atrás'
                       onClick={() => setStep((prevStep) => prevStep - 1)}

@@ -71,14 +71,14 @@ const Home = () => {
 
   return (
     <main className='flex flex-col md:flex-row justify-center items-center w-full h-full'>
-      <section className='bg-secondary md:w-1/4 w-full md:h-full h-1/4 flex flex-col items-center md:justify-center justify-start md:gap-10 gap-2 py-8'>
-        <h1 className='md:text-5xl text-bold text-3xl text-primary text-center px-6 font-light'>¿Dónde te robaron?</h1>
-        <div className='flex justify-center items-center gap-2 w-72 px-6'>
+      <section className='bg-secondary md:w-1/2 w-full md:h-full h-1/4 flex flex-col items-center md:justify-center justify-start md:gap-10 gap-2 md:py-8 py-2'>
+        <h1 className='md:text-5xl text-bold text-2xl text-primary text-center px-6 font-light'>¿Dónde te robaron?</h1>
+        <div className='flex justify-center items-center gap-2 w-64 px-3'>
           <div className='w-full relative'>
             <LocationSearch onLocationSelect={handleLocationSelect} />
           </div>
-          <div className='h-full'>
-            <Button text='Marcar' onClick={handleSaveLocation} background='#0F5EFD' color='#fff' />
+          <div className='md:h-9 h-7'>
+            <Button text='Marcar' onClick={handleSaveLocation} background='#0F5EFD' color='#fff'/>
           </div>
         </div>
         <div>
@@ -105,7 +105,7 @@ const Home = () => {
       </section>
       {showModal && (
         <Modal>
-          <p className=' text-white'>¿Desea registrar una denuncia?</p>
+          <p className=' text-white text-center'>¿Desea registrar una denuncia?</p>
           <div className='w-full h-12 pt-3 flex justify-center'>
             <Link href='/denuncia'>
               <Button text='Sí, registrar denuncia' onClick={() => setShowModal(false)} background='#255daa' />

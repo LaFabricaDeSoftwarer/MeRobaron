@@ -11,13 +11,11 @@ import Modal from '@mui/material/Modal'
 const PeopleInvolved = ({ setPeopleListParent }) => {
   const { values, handleChange, handleBlur, setFieldValue } = useFormikContext()
   const personTypes = ['denunciado', 'victima', 'testigo']
-  // este estado se inicializa con un objeto que tiene como keys los tipos de personas y como valores false
   const [openModals, setOpenModals] = useState(
     personTypes.reduce((acc, type) => ({ ...acc, [type]: false }), {})
   )
   const [peopleList, setPeopleList] = useState([])
 
-  // este efecto se ejecuta cada vez que peopleList cambia
   useEffect(() => {
     setPeopleListParent(peopleList)
   }, [peopleList, setPeopleListParent])
@@ -69,19 +67,15 @@ const PeopleInvolved = ({ setPeopleListParent }) => {
       role = 'Testigo'
     }
 
-    // Si el nombre y apellido de la persona no están vacíos, se agrega la persona a la lista
     if (newPerson.nombre && newPerson.apellido) {
-      // Actualizar la lista local de personas
       setPeopleList(prevList => [...prevList, { ...newPerson, role }])
 
-      // Actualizar el estado de Formik sin el rol
       const fieldName = type === 'denunciado'
         ? 'reporteds'
         : type === 'victima' ? 'victims' : 'witnesses'
 
       setFieldValue(fieldName, [...(values[fieldName] || []), newPerson])
 
-      // Limpiar los campos del formulario
       if (type === 'denunciado') {
         setFieldValue('reported', {
           nombre: '',

@@ -1,4 +1,3 @@
-// Importa los modelos necesarios
 import { Location } from '../models/locationModel.js'
 
 import db from '../dbconfig.js'

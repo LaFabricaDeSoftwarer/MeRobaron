@@ -34,8 +34,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: VilattaRomina
       MYSQL_DATABASE: merobaron
-      MYSQL_USER: root
-      MYSQL_PASSWORD: VilattaRomina
     volumes:
       - mysql_data:/var/lib/mysql
     ports:

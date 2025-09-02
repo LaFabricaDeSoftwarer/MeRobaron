@@ -1,4 +1,3 @@
-// Importa los modelos necesarios
 import { Location } from '../models/locationModel.js'
 import { Person } from '../models/personModel.js'
 import { Report } from '../models/reportModel.js'
@@ -8,7 +7,6 @@ import { Victim } from '../models/victimModel.js'
 import { Witness } from '../models/witnessModel.js'
 import connectionPool from '../dbconfig.js'
 
-// Esta función toma los datos del denunciante (reporterData) y el connectionPool, crea un objeto Reporter y lo guarda en la base de datos.
 async function saveReporter (reporterData, connectionPool) {
   const reporterObj = new Reporter(
     reporterData.email,
@@ -110,7 +108,6 @@ export async function saveFormData (req, res) {
     const reportResult = await saveReport(report, reporterResult.id, locationResult.id, connection)
     console.log('reportResult', reportResult)
 
-    // Guardar múltiples reporteds, victims y witnesses
     const reportedResults = await Promise.all(reporteds.map(async (reported) => {
       const personResult = await savePerson(reported, connection)
       return await saveReported(personResult.id, reportResult.id, reported, connection)
@@ -126,7 +123,6 @@ export async function saveFormData (req, res) {
       return await saveWitness(personResult.id, reportResult.id, connection)
     }))
 
-    // objeto de datos
     const formData = {
       reporter: reporterResult,
       location: locationResult,
